@@ -94,14 +94,17 @@ A persistência é feita em PostgreSQL por meio de JPA, a documentação da API 
 1. IF a API_Jogos receber requisição de atualização de placar de um Jogo cujo Status persistido é ENCERRADO, THEN THE API_Jogos SHALL recusar a operação, retornar HTTP 409 com mensagem que informa que o Jogo está encerrado, manter placarA e placarB inalterados e não publicar Evento_Placar.
 2. WHILE um Jogo exibido na Interface_Web possuir Status ENCERRADO, THE Interface_Web SHALL não permitir a atualização do placar desse Jogo.
 
-### Requisito 7: Fluxo assíncrono de atualização de placar
+### Requisito 7: Fluxo assíncrono e cache do placar atual
 
-**User Story:** Como integrador, quero que cada atualização de placar gere um evento que atualiza o estado atual no Redis, para que o placar atual seja propagado de forma desacoplada.
+**User Story:** Como torcedor, quero que o placar atual possa ser consultado de forma eficiente e consistente, para acompanhar atualizações frequentes dos jogos sem gerar consultas desnecessárias ao banco de dados principal.
 
 #### Critérios de Aceitação
 
 1. WHEN uma atualização de placar é confirmada no PostgreSQL, THE Sistema SHALL publicar no RabbitMQ um Evento_Placar contendo o identificador do Jogo, placarA e placarB.
 2. WHEN o Consumidor recebe um Evento_Placar do RabbitMQ, THE Consumidor SHALL atualizar no Redis o placarA e o placarB do Jogo identificado no Evento_Placar.
+3. WHEN o placar atual de um Jogo estiver disponível no Redis, THE Sistema SHALL poder utilizar esse valor para atender consultas frequentes de placar sem consultar novamente o PostgreSQL.
+4. IF o placar de um Jogo não estiver disponível no Redis ou o Redis estiver indisponível, THEN THE Sistema SHALL utilizar o placar persistido no PostgreSQL.
+5. WHEN uma atualização de placar for confirmada no PostgreSQL, THE Sistema SHALL garantir que consultas subsequentes não apresentem como atual um valor antigo existente no cache.
 
 ### Requisito 8: Atualizar automaticamente a interface web
 
@@ -146,15 +149,15 @@ A persistência é feita em PostgreSQL por meio de JPA, a documentação da API 
 4. IF uma requisição à API_Jogos solicitar a atualização de placar de um Jogo com Status ENCERRADO, THEN THE API_Jogos SHALL retornar HTTP 409 com o corpo de erro definido no critério 1.
 5. IF ocorrer erro não previsto durante o processamento de uma requisição, THEN THE API_Jogos SHALL retornar HTTP 500 com o corpo de erro definido no critério 1.
 
-### Requisito 12: Testes
+### Requisito 12: Testes e diferenciais
 
-**User Story:** Como avaliador do desafio, quero que o sistema possua testes automatizados, para verificar a corretude das funcionalidades.
+**User Story:** Como avaliador do desafio, quero que o projeto possa possuir testes automatizados das principais funcionalidades, para facilitar a validação do comportamento implementado.
 
-#### Critérios de Aceitação
+#### Itens previstos
 
-1. WHERE testes unitários com JUnit são fornecidos como diferencial, THE Sistema SHALL incluir testes unitários das principais regras de negócio dos Jogos.
-2. WHERE testes de API são fornecidos como diferencial, THE Sistema SHALL incluir testes das operações da API_Jogos.
-3. WHERE testes do fluxo assíncrono são fornecidos de forma opcional, THE Sistema SHALL incluir testes da publicação do Evento_Placar no RabbitMQ e da atualização do placar no Redis.
+1. Testes unitários com JUnit das principais regras de negócio são um diferencial do projeto.
+2. Testes das operações da API REST são um diferencial do projeto.
+3. Testes do fluxo assíncrono envolvendo publicação no RabbitMQ e atualização do Redis são opcionais.
 
 ### Requisito 13: Configurar e executar o sistema
 
