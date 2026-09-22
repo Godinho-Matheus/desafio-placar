@@ -1,7 +1,6 @@
 # Estrutura do Projeto
 
-A estrutura final do projeto deve seguir a arquitetura definida
-no design da Spec ativa do Kiro.
+A estrutura final do projeto deve seguir a arquitetura definida no design da Spec ativa do Kiro.
 
 ## Princípios
 
