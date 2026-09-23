@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.desafio</groupId>
+    <artifactId>placar-tempo-real</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>placar-tempo-real</name>
+    <description>
+        Sistema de gerenciamento de placares de futebol em tempo real.
+        Monolito Jakarta EE empacotado como um unico WAR, alvo de deploy: Payara Server 7.2026.2.
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Java 21 (compilacao via maven-compiler-plugin com release 21) -->
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!--
+            Servidor de aplicacao alvo (runtime): Payara Server 7.2026.2.
+            O Payara fornece as implementacoes de Jakarta EE 11 e do MicroProfile;
+            por isso as APIs correspondentes ficam com escopo "provided".
+        -->
+        <payara.target.version>7.2026.2</payara.target.version>
+
+        <!-- Versoes das APIs providas pelo container (provided) -->
+        <jakartaee.version>11.0.0</jakartaee.version>
+        <microprofile.openapi.version>3.1.2</microprofile.openapi.version>
+
+        <!-- Apache Wicket: manter todos os modulos alinhados na MESMA versao -->
+        <wicket.version>10.11.0</wicket.version>
+
+        <!-- Bibliotecas empacotadas no WAR -->
+        <postgresql.version>42.7.4</postgresql.version>
+        <rabbitmq.amqp-client.version>5.25.0</rabbitmq.amqp-client.version>
+        <jedis.version>5.2.0</jedis.version>
+
+        <!-- Testes -->
+        <junit.jupiter.version>5.11.3</junit.jupiter.version>
+
+        <!-- Plugins -->
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+        <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
+    </properties>
+
+    <dependencies>
+        <!-- Jakarta EE 11 (JAX-RS, JPA, CDI, etc.) — implementacao vem do Payara em runtime -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>${jakartaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Apache Wicket (interface web) -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+
+        <!-- Integracao Wicket-CDI: paginas/componentes Wicket acessam beans CDI (ex.: JogoService) -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-cdi</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+
+        <!-- Driver JDBC PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+
+        <!-- Cliente RabbitMQ (mensageria) -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>${rabbitmq.amqp-client.version}</version>
+        </dependency>
+
+        <!-- Cliente Redis (cache do placar atual) -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+
+        <!--
+            Documentacao OpenAPI/Swagger via anotacoes do MicroProfile OpenAPI.
+            O Payara fornece a implementacao e expoe a Swagger UI, por isso o escopo e "provided".
+            (Sem springdoc nem qualquer dependencia Spring.)
+        -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <version>${microprofile.openapi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JUnit 5 (apenas testes) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>placar-tempo-real</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.plugin.version}</version>
+                <configuration>
+                    <!-- web.xml sera adicionado em tarefas posteriores; nao falhar por ausencia agora -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
