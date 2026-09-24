@@ -18,7 +18,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Criar o esqueleto do pacote `config` para as configuraÃ§Ãµes externas (leitura de propriedades/variÃ¡veis de ambiente, sem credenciais no cÃ³digo).
     - _Requisitos: 13.1, 13.2_
 
-- [ ] 2. Modelo de domÃ­nio e persistÃªncia JPA/PostgreSQL
+- [x] 2. Modelo de domÃ­nio e persistÃªncia JPA/PostgreSQL
   - [x] 2.1 Criar o enum `Status` e a entidade JPA `Jogo`
     - Criar o enum `Status` com `EM_ANDAMENTO` e `ENCERRADO` no pacote `domain`.
     - Criar a entidade `Jogo` (`id` identity `Long`, `timeA`, `timeB`, `placarA`/`placarB` default 0, `status` como `EnumType.STRING`, `dataHoraPartida`) no pacote `domain`.
@@ -29,7 +29,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
   - [x] 2.3 Implementar o `JogoRepository` (JPA/PostgreSQL)
     - Criar `JogoRepository` no pacote `persistence` com `salvar`, `buscarPorId`, `listarTodos` e `listarPorStatus` usando `EntityManager`/JPA.
     - _Requisitos: 1.2, 2.1, 2.2, 2.3, 3.1, 4.2, 5.2, 13.3_
-  - [ ] 2.4 Configurar `persistence.xml` e a conexÃ£o PostgreSQL
+  - [x] 2.4 Configurar `persistence.xml` e a conexÃ£o PostgreSQL
     - Criar `persistence.xml` com a unidade de persistÃªncia e a geraÃ§Ã£o de esquema por JPA na inicializaÃ§Ã£o.
     - Externalizar a configuraÃ§Ã£o da conexÃ£o PostgreSQL (sem credenciais no cÃ³digo), integrada ao pacote `config`.
     - _Requisitos: 13.2, 13.3_

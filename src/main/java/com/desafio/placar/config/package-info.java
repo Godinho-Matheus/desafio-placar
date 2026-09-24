@@ -3,8 +3,11 @@
  *
  * <p>Reune a ativacao do JAX-RS ({@link com.desafio.placar.config.JaxRsApplication})
  * e o ponto central de leitura de configuracao externa
- * ({@link com.desafio.placar.config.ConfiguracaoExterna}). A configuracao de
- * PostgreSQL, Redis e RabbitMQ sera integrada aqui nas tarefas seguintes da Spec,
- * sempre a partir do ambiente e sem credenciais no codigo-fonte.</p>
+ * ({@link com.desafio.placar.config.ConfiguracaoExterna}). A conexao com o
+ * PostgreSQL e gerenciada pelo Payara (DataSource) e referenciada apenas por
+ * JNDI na unidade de persistencia; esse nome JNDI e fixo e fica documentado em
+ * {@link com.desafio.placar.config.ConfiguracaoBancoDados}, sem credenciais no
+ * codigo-fonte. A configuracao de Redis e RabbitMQ sera integrada aqui nas
+ * tarefas seguintes da Spec.</p>
  */
 package com.desafio.placar.config;

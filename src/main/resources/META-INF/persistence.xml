@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Unidade de persistencia do Sistema.
+
+    Estrategia (conforme design.md, "Fonte de verdade" e "Estrategia de esquema
+    (DDL via JPA)"):
+
+    - PostgreSQL e a unica fonte de verdade; usa-se exclusivamente Jakarta
+      Persistence (JPA), sem APIs proprietarias de provider.
+    - transaction-type="JTA": as transacoes sao gerenciadas pelo container
+      (Payara), coerente com o uso de JTA/@Transactional no JogoService.
+    - A conexao com o PostgreSQL e obtida por um DataSource gerenciado pelo
+      Payara e referenciado apenas por JNDI (<jta-data-source>). Host, porta,
+      nome do banco, usuario e senha ficam FORA do codigo-fonte: sao
+      configurados no Payara (JDBC Connection Pool + JDBC Resource). Assim
+      nenhuma credencial e fixada aqui.
+    - O esquema da tabela `jogo` e criado/estendido na inicializacao, quando o
+      PostgreSQL esta disponivel, pelo EclipseLink (provider JPA padrao do
+      Payara) por meio das propriedades eclipselink.ddl-generation
+      (create-or-extend-tables), sem DDL manual.
+
+    O nome JNDI do DataSource e fixo na aplicacao: "jdbc/placar" (veja
+    com.desafio.placar.config.ConfiguracaoBancoDados). O recurso JDBC deve ser
+    criado no Payara com esse mesmo nome.
+-->
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                                 https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="placarPU" transaction-type="JTA">
+
+        <!--
+            DataSource gerenciado pelo Payara, referenciado apenas por JNDI.
+            As credenciais e os dados de conexao (host/porta/banco/usuario/senha)
+            ficam no JDBC Connection Pool configurado no Payara, nunca no codigo.
+        -->
+        <jta-data-source>jdbc/placar</jta-data-source>
+
+        <!-- Entidade JPA do dominio registrada explicitamente. -->
+        <class>com.desafio.placar.domain.Jogo</class>
+
+        <!-- So mapear classes anotadas explicitamente listadas acima. -->
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <properties>
+            <!--
+                Criacao/extensao do esquema na inicializacao (Requisito 13.3)
+                provida pelo EclipseLink, provider JPA padrao do Payara.
+                "create-or-extend-tables" cria a tabela `jogo` quando ausente e
+                estende o esquema ao mapeamento sem apagar dados, sem DDL manual.
+            -->
+            <property name="eclipselink.ddl-generation"
+                      value="create-or-extend-tables"/>
+            <property name="eclipselink.ddl-generation.output-mode"
+                      value="database"/>
+        </properties>
+
+    </persistence-unit>
+
+</persistence>

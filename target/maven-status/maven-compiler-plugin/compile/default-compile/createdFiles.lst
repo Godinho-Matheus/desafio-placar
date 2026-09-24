@@ -1,6 +1,7 @@
 com\desafio\placar\domain\excecao\JogoEncerradoException.class
 com\desafio\placar\domain\Status.class
 com\desafio\placar\domain\Jogo.class
+com\desafio\placar\config\ConfiguracaoBancoDados.class
 com\desafio\placar\config\package-info.class
 com\desafio\placar\domain\excecao\EntradaInvalidaException.class
 com\desafio\placar\domain\package-info.class

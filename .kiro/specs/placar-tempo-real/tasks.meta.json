@@ -43,6 +43,25 @@
         "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
         "timestamp": 1790290903899
       }
+    ],
+    "2.4 Configurar `persistence.xml` e a conexÃ£o PostgreSQL": [
+      {
+        "executionId": "b8a997b0-a874-4399-a547-0df567214089",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790291883302
+      },
+      {
+        "executionId": "b8a997b0-a874-4399-a547-0df567214089",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790292065694
+      }
+    ],
+    "2. Modelo de domÃ­nio e persistÃªncia JPA/PostgreSQL": [
+      {
+        "executionId": "b8a997b0-a874-4399-a547-0df567214089",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790292065822
+      }
     ]
   }
 }
