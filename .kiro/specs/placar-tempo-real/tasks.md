@@ -19,7 +19,7 @@ Este plano converte o design aprovado em tarefas de codificação incrementais p
     - _Requisitos: 13.1, 13.2_
 
 - [ ] 2. Modelo de domínio e persistência JPA/PostgreSQL
-  - [ ] 2.1 Criar o enum `Status` e a entidade JPA `Jogo`
+  - [x] 2.1 Criar o enum `Status` e a entidade JPA `Jogo`
     - Criar o enum `Status` com `EM_ANDAMENTO` e `ENCERRADO` no pacote `domain`.
     - Criar a entidade `Jogo` (`id` identity `Long`, `timeA`, `timeB`, `placarA`/`placarB` default 0, `status` como `EnumType.STRING`, `dataHoraPartida`) no pacote `domain`.
     - _Requisitos: 1.2, 3.1, 13.3_

@@ -19,6 +19,18 @@
         "chatSessionId": "sess_74a7726c-5d5a-4bef-9d4a-8aa7e10d90a1",
         "timestamp": 1790208128212
       }
+    ],
+    "2.1 Criar o enum `Status` e a entidade JPA `Jogo`": [
+      {
+        "executionId": "93cc7365-58a2-4f84-8fb5-9aa11f4b02bc",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790290069989
+      },
+      {
+        "executionId": "93cc7365-58a2-4f84-8fb5-9aa11f4b02bc",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790290275585
+      }
     ]
   }
 }
