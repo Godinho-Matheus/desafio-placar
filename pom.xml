@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.desafio</groupId>
-    <artifactId>placar-tempo-real</artifactId>
+    <artifactId>desafio-placar</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>placar-tempo-real</name>
+    <name>desafio-placar</name>
     <description>
         Sistema de gerenciamento de placares de futebol em tempo real.
         Monolito Jakarta EE empacotado como um unico WAR, alvo de deploy: Payara Server 7.2026.2.
@@ -115,7 +115,7 @@
     </dependencies>
 
     <build>
-        <finalName>placar-tempo-real</finalName>
+        <finalName>desafio-placar</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

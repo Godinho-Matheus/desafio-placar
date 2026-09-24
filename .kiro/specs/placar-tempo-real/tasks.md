@@ -6,14 +6,14 @@ Este plano converte o design aprovado em tarefas de codificação incrementais p
 
 ## Tasks
 
-- [ ] 1. Estrutura inicial do projeto Maven/Jakarta EE e configurações
+- [x] 1. Estrutura inicial do projeto Maven/Jakarta EE e configurações
   - [x] 1.1 Configurar o `pom.xml` e o pacote base
     - Criar `pom.xml` com empacotamento `war` e build via Maven.
     - Declarar dependências: Jakarta EE API (JAX-RS, JPA, CDI), Apache Wicket, o módulo de integração Wicket-CDI (para que as páginas/componentes Wicket acessem beans CDI, como `JogoService`, no mesmo WAR), driver PostgreSQL, cliente RabbitMQ, cliente Redis, OpenAPI/Swagger e JUnit (escopo de teste). Não introduzir Spring.
     - As versões concretas devem ser mutuamente compatíveis entre Java, Jakarta EE, Payara e Apache Wicket, conforme a stack definida no Design; exigir compatibilidade sem fixar números de versão específicos nem inventar uma stack diferente.
     - Criar o pacote base `com.desafio.placar` e a estrutura de diretórios `src/main/java`, `src/main/resources`, `src/main/webapp` e `src/test/java`.
     - _Requisitos: 13.1, 13.2_
-  - [ ] 1.2 Ativar JAX-RS e criar o esqueleto de configuração externa
+  - [x] 1.2 Ativar JAX-RS e criar o esqueleto de configuração externa
     - Criar a classe de ativação JAX-RS com `@ApplicationPath` no pacote `config`.
     - Criar o esqueleto do pacote `config` para as configurações externas (leitura de propriedades/variáveis de ambiente, sem credenciais no código).
     - _Requisitos: 13.1, 13.2_
