@@ -1,11 +1,13 @@
-com\desafio\placar\config\ConfiguracaoExterna.class
 com\desafio\placar\domain\excecao\JogoEncerradoException.class
 com\desafio\placar\domain\Status.class
-com\desafio\placar\package-info.class
-com\desafio\placar\config\JaxRsApplication.class
 com\desafio\placar\domain\Jogo.class
 com\desafio\placar\config\package-info.class
-com\desafio\placar\domain\excecao\package-info.class
 com\desafio\placar\domain\excecao\EntradaInvalidaException.class
 com\desafio\placar\domain\package-info.class
+com\desafio\placar\persistence\package-info.class
 com\desafio\placar\domain\excecao\NaoEncontradoException.class
+com\desafio\placar\config\ConfiguracaoExterna.class
+com\desafio\placar\package-info.class
+com\desafio\placar\persistence\JogoRepository.class
+com\desafio\placar\config\JaxRsApplication.class
+com\desafio\placar\domain\excecao\package-info.class
