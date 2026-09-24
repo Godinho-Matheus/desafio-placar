@@ -23,7 +23,7 @@ Este plano converte o design aprovado em tarefas de codificação incrementais p
     - Criar o enum `Status` com `EM_ANDAMENTO` e `ENCERRADO` no pacote `domain`.
     - Criar a entidade `Jogo` (`id` identity `Long`, `timeA`, `timeB`, `placarA`/`placarB` default 0, `status` como `EnumType.STRING`, `dataHoraPartida`) no pacote `domain`.
     - _Requisitos: 1.2, 3.1, 13.3_
-  - [ ] 2.2 Criar as exceções de domínio
+  - [x] 2.2 Criar as exceções de domínio
     - Criar `EntradaInvalidaException`, `NaoEncontradoException` e `JogoEncerradoException` no pacote `domain.excecao`.
     - _Requisitos: 1.3, 3.2, 4.4, 4.5, 5.5, 6.1_
   - [ ] 2.3 Implementar o `JogoRepository` (JPA/PostgreSQL)

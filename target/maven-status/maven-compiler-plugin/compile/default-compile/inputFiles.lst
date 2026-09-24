@@ -1,6 +1,10 @@
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoExterna.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\JaxRsApplication.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\package-info.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\EntradaInvalidaException.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\JogoEncerradoException.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\NaoEncontradoException.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\Jogo.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\Status.java

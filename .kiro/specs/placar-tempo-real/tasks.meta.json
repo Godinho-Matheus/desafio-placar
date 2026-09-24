@@ -31,6 +31,18 @@
         "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
         "timestamp": 1790290275585
       }
+    ],
+    "2.2 Criar as exceções de domínio": [
+      {
+        "executionId": "725960dd-2d6b-4497-a701-60612b057f80",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790290770439
+      },
+      {
+        "executionId": "725960dd-2d6b-4497-a701-60612b057f80",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790290903899
+      }
     ]
   }
 }
