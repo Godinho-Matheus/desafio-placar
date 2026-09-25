@@ -3,9 +3,19 @@ package com.desafio.placar.api;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+
 import com.desafio.placar.api.dto.AtualizarPlacarRequest;
 import com.desafio.placar.api.dto.AtualizarStatusRequest;
 import com.desafio.placar.api.dto.CriarJogoRequest;
+import com.desafio.placar.api.dto.ErroResponse;
 import com.desafio.placar.api.dto.JogoResponse;
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.Status;
@@ -59,7 +69,18 @@ public class JogoResource {
      * @throws EntradaInvalidaException se o corpo da requisicao estiver ausente
      */
     @POST
-    public Response criar(CriarJogoRequest request) {
+    @Operation(summary = "Criar jogo",
+            description = "Cria um jogo com placar 0x0 e status EM_ANDAMENTO.")
+    @APIResponses({
+            @APIResponse(responseCode = "201", description = "Jogo criado.",
+                    content = @Content(schema = @Schema(implementation = JogoResponse.class))),
+            @APIResponse(responseCode = "400", description = "Campo obrigatorio ausente.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    public Response criar(
+            @RequestBody(required = true,
+                    content = @Content(schema = @Schema(implementation = CriarJogoRequest.class)))
+            CriarJogoRequest request) {
         if (request == null) {
             throw new EntradaInvalidaException(
                     "O corpo da requisicao de criacao de Jogo nao foi informado.");
@@ -80,7 +101,19 @@ public class JogoResource {
      * @throws EntradaInvalidaException se o status informado for vazio ou invalido
      */
     @GET
-    public Response listar(@QueryParam("status") String status) {
+    @Operation(summary = "Listar jogos",
+            description = "Lista os jogos. Sem o parametro 'status' lista todos; "
+                    + "com 'status' aceita apenas EM_ANDAMENTO ou ENCERRADO.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de jogos.",
+                    content = @Content(schema = @Schema(type = SchemaType.ARRAY,
+                            implementation = JogoResponse.class))),
+            @APIResponse(responseCode = "400", description = "Status vazio ou invalido.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    public Response listar(
+            @Parameter(description = "Filtro opcional de status. Valores aceitos: EM_ANDAMENTO, ENCERRADO.")
+            @QueryParam("status") String status) {
         Status filtro = null;
         if (status != null) {
             if (status.isBlank()) {
@@ -107,7 +140,17 @@ public class JogoResource {
      */
     @GET
     @Path("/{id}")
-    public Response buscarPorId(@PathParam("id") Long id) {
+    @Operation(summary = "Buscar jogo por id",
+            description = "Retorna o jogo correspondente ao identificador informado.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Jogo encontrado.",
+                    content = @Content(schema = @Schema(implementation = JogoResponse.class))),
+            @APIResponse(responseCode = "404", description = "Jogo nao encontrado.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    public Response buscarPorId(
+            @Parameter(description = "Identificador do jogo.", required = true)
+            @PathParam("id") Long id) {
         Jogo jogo = jogoService.buscarPorId(id);
         return Response.ok(toResponse(jogo)).build();
     }
@@ -127,7 +170,25 @@ public class JogoResource {
      */
     @PUT
     @Path("/{id}/placar")
-    public Response atualizarPlacar(@PathParam("id") Long id, AtualizarPlacarRequest request) {
+    @Operation(summary = "Atualizar placar",
+            description = "Substitui placarA e placarB de um jogo EM_ANDAMENTO. "
+                    + "Um jogo ENCERRADO nao pode ter o placar alterado.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Placar atualizado.",
+                    content = @Content(schema = @Schema(implementation = JogoResponse.class))),
+            @APIResponse(responseCode = "400", description = "Entrada invalida.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class))),
+            @APIResponse(responseCode = "404", description = "Jogo nao encontrado.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class))),
+            @APIResponse(responseCode = "409", description = "Jogo encerrado.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    public Response atualizarPlacar(
+            @Parameter(description = "Identificador do jogo.", required = true)
+            @PathParam("id") Long id,
+            @RequestBody(required = true,
+                    content = @Content(schema = @Schema(implementation = AtualizarPlacarRequest.class)))
+            AtualizarPlacarRequest request) {
         if (request == null) {
             throw new EntradaInvalidaException(
                     "O corpo da requisicao de atualizacao de placar nao foi informado.");
@@ -158,7 +219,24 @@ public class JogoResource {
      */
     @PUT
     @Path("/{id}/status")
-    public Response atualizarStatus(@PathParam("id") Long id, AtualizarStatusRequest request) {
+    @Operation(summary = "Encerrar jogo",
+            description = "Encerra um jogo. O unico valor aceito e \"ENCERRADO\"; qualquer outro valor "
+                    + "resulta em HTTP 400, pois nao existe reabertura. Repetir \"ENCERRADO\" em um jogo "
+                    + "ja encerrado retorna HTTP 200 (idempotente).")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Jogo encerrado (ou ja encerrado).",
+                    content = @Content(schema = @Schema(implementation = JogoResponse.class))),
+            @APIResponse(responseCode = "400", description = "Status invalido.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class))),
+            @APIResponse(responseCode = "404", description = "Jogo nao encontrado.",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    public Response atualizarStatus(
+            @Parameter(description = "Identificador do jogo.", required = true)
+            @PathParam("id") Long id,
+            @RequestBody(required = true,
+                    content = @Content(schema = @Schema(implementation = AtualizarStatusRequest.class)))
+            AtualizarStatusRequest request) {
         if (request == null || request.status() == null || request.status().isBlank()) {
             throw new EntradaInvalidaException(
                     "O campo 'status' nao foi informado. Unico valor suportado: ENCERRADO.");

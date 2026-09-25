@@ -64,8 +64,8 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Todos devem produzir o corpo `{"mensagem": ...}` com descriÃ§Ã£o do motivo.
     - _Requisitos: 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 5. DocumentaÃ§Ã£o OpenAPI/Swagger
-  - [ ] 5.1 Anotar os endpoints com OpenAPI e expor a Swagger UI
+- [x] 5. DocumentaÃ§Ã£o OpenAPI/Swagger
+  - [x] 5.1 Anotar os endpoints com OpenAPI e expor a Swagger UI
     - Adicionar anotaÃ§Ãµes OpenAPI no `JogoResource` cobrindo os cinco endpoints.
     - Habilitar a exposiÃ§Ã£o da Swagger UI no Payara.
     - _Requisitos: 10.1, 10.2_

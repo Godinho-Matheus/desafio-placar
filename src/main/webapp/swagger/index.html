@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Desafio Placar - API (Swagger UI)</title>
+    <!--
+        Assets carregados do WebJar swagger-ui empacotado no WAR (offline, sem CDN).
+        A pagina esta em <contexto>/swagger/index.html, entao os caminhos relativos
+        "../webjars/..." resolvem para <contexto>/webjars/swagger-ui/5.32.14/...
+    -->
+    <link rel="stylesheet" href="../webjars/swagger-ui/5.32.14/swagger-ui.css">
+</head>
+<body>
+    <div id="swagger-ui"></div>
+
+    <script src="../webjars/swagger-ui/5.32.14/swagger-ui-bundle.js"></script>
+    <script src="../webjars/swagger-ui/5.32.14/swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function () {
+            // /openapi e servido pelo Payara no RAIZ do servidor (fora do contexto da app).
+            // Usar window.location.origin torna a URL independente de host/porta.
+            SwaggerUIBundle({
+                url: window.location.origin + '/openapi',
+                dom_id: '#swagger-ui',
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                layout: 'StandaloneLayout'
+            });
+        };
+    </script>
+</body>
+</html>

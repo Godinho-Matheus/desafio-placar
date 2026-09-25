@@ -40,6 +40,9 @@
         <rabbitmq.amqp-client.version>5.25.0</rabbitmq.amqp-client.version>
         <jedis.version>5.2.0</jedis.version>
 
+        <!-- Swagger UI (WebJar): assets estaticos empacotados no WAR para servir a UI localmente -->
+        <swagger.ui.webjar.version>5.32.14</swagger.ui.webjar.version>
+
         <!-- Testes -->
         <junit.jupiter.version>5.11.3</junit.jupiter.version>
 
@@ -94,8 +97,9 @@
         </dependency>
 
         <!--
-            Documentacao OpenAPI/Swagger via anotacoes do MicroProfile OpenAPI.
-            O Payara fornece a implementacao e expoe a Swagger UI, por isso o escopo e "provided".
+            Documentacao OpenAPI via anotacoes do MicroProfile OpenAPI.
+            O Payara fornece a implementacao e gera/expoe nativamente o DOCUMENTO
+            OpenAPI em /openapi (raiz do servidor), por isso o escopo e "provided".
             (Sem springdoc nem qualquer dependencia Spring.)
         -->
         <dependency>
@@ -103,6 +107,19 @@
             <artifactId>microprofile-openapi-api</artifactId>
             <version>${microprofile.openapi.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!--
+            Swagger UI (WebJar): a interface visual NAO e fornecida nativamente pelo Payara.
+            Os assets estaticos ficam sob META-INF/resources/webjars/swagger-ui/<versao>/
+            e sao expostos automaticamente pelo container (Servlet 3+) quando o JAR esta
+            em WEB-INF/lib. Por isso NAO usar escopo "provided": o JAR deve ser empacotado
+            no WAR. A pagina src/main/webapp/swagger/index.html consome esses assets.
+        -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>swagger-ui</artifactId>
+            <version>${swagger.ui.webjar.version}</version>
         </dependency>
 
         <!-- JUnit 5 (apenas testes) -->
