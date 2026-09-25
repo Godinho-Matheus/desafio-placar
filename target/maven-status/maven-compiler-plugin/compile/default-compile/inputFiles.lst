@@ -1,3 +1,16 @@
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\AtualizarPlacarRequest.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\AtualizarStatusRequest.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\CriarJogoRequest.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\ErroResponse.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\JogoResponse.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\dto\package-info.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\JogoResource.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\EntradaInvalidaExceptionMapper.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\ErroGenericoExceptionMapper.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\JogoEncerradoExceptionMapper.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\NaoEncontradoExceptionMapper.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\package-info.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoBancoDados.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoExterna.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\JaxRsApplication.java

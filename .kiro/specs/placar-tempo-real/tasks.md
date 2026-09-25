@@ -1,4 +1,4 @@
-﻿# Implementation Plan
+# Implementation Plan
 
 ## Overview
 
@@ -47,11 +47,11 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Deixar o ponto de disparo do evento CDI reservado (o disparo Ã© adicionado na tarefa 7.1).
     - _Requisitos: 4.1, 4.2, 4.4, 4.5, 6.1_
 
-- [ ] 4. API REST (JAX-RS) e tratamento de erros
-  - [ ] 4.1 Criar os DTOs de request/response
+- [x] 4. API REST (JAX-RS) e tratamento de erros
+  - [x] 4.1 Criar os DTOs de request/response
     - Criar `CriarJogoRequest`, `AtualizarPlacarRequest` (usando `Integer` para distinguir ausente de 0), `AtualizarStatusRequest`, `JogoResponse` e `ErroResponse` no pacote `api.dto`.
     - _Requisitos: 1.1, 4.1, 5.1, 11.1_
-  - [ ] 4.2 Implementar o `JogoResource` com os cinco endpoints
+  - [x] 4.2 Implementar o `JogoResource` com os cinco endpoints
     - `POST /jogos` (201; 400 campo obrigatÃ³rio ausente).
     - `GET /jogos` com filtro `status` opcional (200; 400 para status vazio ou invÃ¡lido com mensagem informando EM_ANDAMENTO e ENCERRADO).
     - `GET /jogos/{id}` (200; 404).
@@ -59,7 +59,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - `PUT /jogos/{id}/status` com corpo `{"status":"ENCERRADO"}` (200 transiÃ§Ã£o; 200 idempotente; 400 para qualquer outro valor).
     - Delegar toda a lÃ³gica ao `JogoService`.
     - _Requisitos: 1.1, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 3.1, 3.2, 4.1, 4.4, 4.5, 5.1, 5.3, 5.4, 5.5, 6.1_
-  - [ ] 4.3 Implementar os ExceptionMappers padronizados
+  - [x] 4.3 Implementar os ExceptionMappers padronizados
     - Criar mappers no pacote `api.mapper` para 400 (`EntradaInvalidaException`), 404 (`NaoEncontradoException`), 409 (`JogoEncerradoException`) e um mapper genÃ©rico 500.
     - Todos devem produzir o corpo `{"mensagem": ...}` com descriÃ§Ã£o do motivo.
     - _Requisitos: 11.1, 11.2, 11.3, 11.4, 11.5_

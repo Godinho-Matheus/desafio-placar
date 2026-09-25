@@ -62,6 +62,18 @@
         "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
         "timestamp": 1790292065822
       }
+    ],
+    "4.1 Criar os DTOs de request/response": [
+      {
+        "executionId": "79e6c68c-cdea-4839-b5ab-5668bc131a96",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790296344697
+      },
+      {
+        "executionId": "79e6c68c-cdea-4839-b5ab-5668bc131a96",
+        "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
+        "timestamp": 1790296519758
+      }
     ]
   }
 }
