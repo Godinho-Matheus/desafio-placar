@@ -6,6 +6,7 @@ import java.util.List;
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.Status;
 import com.desafio.placar.domain.excecao.EntradaInvalidaException;
+import com.desafio.placar.domain.excecao.JogoEncerradoException;
 import com.desafio.placar.domain.excecao.NaoEncontradoException;
 import com.desafio.placar.persistence.JogoRepository;
 
@@ -133,5 +134,59 @@ public class JogoService {
         }
         jogo.setStatus(Status.ENCERRADO);
         return repository.salvar(jogo);
+    }
+
+    /**
+     * Atualiza o placar de um Jogo {@link Status#EM_ANDAMENTO}, substituindo
+     * {@code placarA} e {@code placarB} pelos valores informados e persistindo o
+     * novo placar no PostgreSQL.
+     *
+     * <p>Valida que {@code placarA} e {@code placarB} sao maiores ou iguais a 0;
+     * quando qualquer um for negativo, lanca {@link EntradaInvalidaException}
+     * (mapeada para HTTP 400 em tarefa posterior) e nao altera o placar
+     * persistido. Se o identificador nao corresponder a Jogo persistido, lanca
+     * {@link NaoEncontradoException} (HTTP 404). Se o Jogo estiver
+     * {@link Status#ENCERRADO}, lanca {@link JogoEncerradoException} (HTTP 409),
+     * preservando o placar e sem persistir, conforme a regra de que uma partida
+     * encerrada nao pode ter o placar alterado.</p>
+     *
+     * <p>A operacao e transacional (JTA): a carga, a validacao da regra de
+     * negocio e a persistencia do novo placar ocorrem na mesma transacao.</p>
+     *
+     * @param id      identificador do Jogo
+     * @param placarA novo placar do time da casa (inteiro maior ou igual a 0)
+     * @param placarB novo placar do time visitante (inteiro maior ou igual a 0)
+     * @return o Jogo com o placar atualizado
+     * @throws EntradaInvalidaException se {@code placarA} ou {@code placarB} for negativo
+     * @throws NaoEncontradoException   se nao existir Jogo com o identificador
+     * @throws JogoEncerradoException   se o Jogo estiver {@link Status#ENCERRADO}
+     */
+    @Transactional
+    public Jogo atualizarPlacar(Long id, int placarA, int placarB) {
+        if (placarA < 0) {
+            throw new EntradaInvalidaException(
+                    "O campo 'placarA' deve ser um inteiro maior ou igual a 0.");
+        }
+        if (placarB < 0) {
+            throw new EntradaInvalidaException(
+                    "O campo 'placarB' deve ser um inteiro maior ou igual a 0.");
+        }
+
+        Jogo jogo = buscarPorId(id);
+
+        if (jogo.getStatus() == Status.ENCERRADO) {
+            throw new JogoEncerradoException(
+                    "O Jogo " + id + " esta encerrado e nao pode ter o placar alterado.");
+        }
+
+        jogo.setPlacarA(placarA);
+        jogo.setPlacarB(placarB);
+        Jogo atualizado = repository.salvar(jogo);
+
+        // Ponto de disparo do evento CDI reservado: o Event.fire(...) do
+        // PlacarAtualizadoEvent (dentro desta transacao, apos a persistencia)
+        // sera adicionado na tarefa 7.1.
+
+        return atualizado;
     }
 }

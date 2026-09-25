@@ -34,7 +34,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Externalizar a configuraÃ§Ã£o da conexÃ£o PostgreSQL (sem credenciais no cÃ³digo), integrada ao pacote `config`.
     - _Requisitos: 13.2, 13.3_
 
-- [ ] 3. Regras de negÃ³cio e `JogoService` (parte sÃ­ncrona)
+- [x] 3. Regras de negÃ³cio e `JogoService` (parte sÃ­ncrona)
   - [x] 3.1 Implementar criaÃ§Ã£o, listagem, busca e encerramento no `JogoService`
     - Criar `JogoService` no pacote `service`.
     - `criar`: validar obrigatÃ³rios (timeA, timeB, dataHoraPartida), iniciar placar 0x0 e status EM_ANDAMENTO, persistindo via `JogoRepository`.
@@ -42,7 +42,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - `buscarPorId`: lanÃ§ar `NaoEncontradoException` (404) quando nÃ£o existir.
     - `encerrar`: transiÃ§Ã£o EM_ANDAMENTO â†’ ENCERRADO idempotente, preservando placarA/placarB.
     - _Requisitos: 1.1, 2.1, 2.2, 2.3, 2.4, 3.1, 3.2, 5.1, 5.2, 5.3, 5.4_
-  - [ ] 3.2 Implementar `atualizarPlacar` transacional no `JogoService`
+  - [x] 3.2 Implementar `atualizarPlacar` transacional no `JogoService`
     - MÃ©todo `@Transactional`: validar placarA/placarB inteiros `>= 0` (400); 404 se inexistente; 409 se ENCERRADO; persistir o novo placar no PostgreSQL.
     - Deixar o ponto de disparo do evento CDI reservado (o disparo Ã© adicionado na tarefa 7.1).
     - _Requisitos: 4.1, 4.2, 4.4, 4.5, 6.1_
