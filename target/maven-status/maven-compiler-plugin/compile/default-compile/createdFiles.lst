@@ -1,3 +1,4 @@
+com\desafio\placar\service\JogoService.class
 com\desafio\placar\domain\excecao\JogoEncerradoException.class
 com\desafio\placar\domain\Status.class
 com\desafio\placar\domain\Jogo.class
@@ -12,3 +13,4 @@ com\desafio\placar\package-info.class
 com\desafio\placar\persistence\JogoRepository.class
 com\desafio\placar\config\JaxRsApplication.class
 com\desafio\placar\domain\excecao\package-info.class
+com\desafio\placar\service\package-info.class

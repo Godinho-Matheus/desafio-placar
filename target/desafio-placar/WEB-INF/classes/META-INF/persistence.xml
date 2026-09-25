@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Unidade de persistencia do Sistema.
 
@@ -19,9 +19,9 @@
       Payara) por meio das propriedades eclipselink.ddl-generation
       (create-or-extend-tables), sem DDL manual.
 
-    O nome JNDI padrao esperado do DataSource e "jdbc/placar" (veja
+    O nome JNDI do DataSource e fixo na aplicacao: "jdbc/placar" (veja
     com.desafio.placar.config.ConfiguracaoBancoDados). O recurso JDBC deve ser
-    criado no Payara com esse nome (ou ajustado de forma consistente).
+    criado no Payara com esse mesmo nome.
 -->
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

@@ -35,7 +35,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - _Requisitos: 13.2, 13.3_
 
 - [ ] 3. Regras de negÃ³cio e `JogoService` (parte sÃ­ncrona)
-  - [ ] 3.1 Implementar criaÃ§Ã£o, listagem, busca e encerramento no `JogoService`
+  - [x] 3.1 Implementar criaÃ§Ã£o, listagem, busca e encerramento no `JogoService`
     - Criar `JogoService` no pacote `service`.
     - `criar`: validar obrigatÃ³rios (timeA, timeB, dataHoraPartida), iniciar placar 0x0 e status EM_ANDAMENTO, persistindo via `JogoRepository`.
     - `listar(filtroOpcional)`: null retorna todos; filtro por status retorna somente os correspondentes.
