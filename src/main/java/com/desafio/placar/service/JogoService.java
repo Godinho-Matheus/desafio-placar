@@ -2,7 +2,10 @@ package com.desafio.placar.service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import com.desafio.placar.cache.PlacarAtual;
+import com.desafio.placar.cache.PlacarCache;
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.Status;
 import com.desafio.placar.domain.excecao.EntradaInvalidaException;
@@ -31,21 +34,26 @@ public class JogoService {
 
     private final JogoRepository repository;
 
+    private final PlacarCache placarCache;
+
     /**
      * Construtor padrao exigido pelo CDI.
      */
     protected JogoService() {
         this.repository = null;
+        this.placarCache = null;
     }
 
     /**
-     * Cria o servico com o repositorio de Jogos.
+     * Cria o servico com o repositorio de Jogos e o cache de placar.
      *
-     * @param repository repositorio JPA de Jogos
+     * @param repository  repositorio JPA de Jogos
+     * @param placarCache cache Redis de placar atual
      */
     @Inject
-    public JogoService(JogoRepository repository) {
+    public JogoService(JogoRepository repository, PlacarCache placarCache) {
         this.repository = repository;
+        this.placarCache = placarCache;
     }
 
     /**
@@ -188,5 +196,38 @@ public class JogoService {
         // sera adicionado na tarefa 7.1.
 
         return atualizado;
+    }
+
+    /**
+     * Obtem o placar atual de um Jogo com leitura Redis-first e fallback no
+     * PostgreSQL.
+     *
+     * <p>Le primeiro o Redis por meio de {@link PlacarCache#ler(Long)}: quando
+     * ha valor em cache (HIT), o placar e retornado imediatamente, sem qualquer
+     * acesso ao PostgreSQL. Somente em cache MISS ou indisponibilidade do Redis
+     * (ambos colapsados em {@code Optional.empty()} por
+     * {@link PlacarCache#ler(Long)}) recorre-se ao {@link #buscarPorId(Long)},
+     * que lanca {@link NaoEncontradoException} para identificador inexistente; o
+     * placar e entao reconstruido a partir do Jogo persistido, que permanece
+     * como fonte de verdade.</p>
+     *
+     * <p>Consequencia intencional do fluxo Redis-first: em HIT a existencia do
+     * Jogo nao e verificada contra o banco, evitando a leitura no PostgreSQL. O
+     * {@link NaoEncontradoException} para Jogo inexistente ocorre apenas no
+     * caminho de MISS/indisponibilidade. Esta operacao apenas le e nao popula o
+     * cache.</p>
+     *
+     * @param id identificador do Jogo
+     * @return o placar atual do Jogo
+     * @throws NaoEncontradoException se, no caminho de fallback, nao existir Jogo
+     *                                com o identificador
+     */
+    public PlacarAtual obterPlacarAtual(Long id) {
+        Optional<PlacarAtual> emCache = placarCache.ler(id);
+        if (emCache.isPresent()) {
+            return emCache.get();
+        }
+        Jogo jogo = buscarPorId(id); // MISS/indisponibilidade: fonte de verdade e guarda de existencia (404)
+        return new PlacarAtual(jogo.getPlacarA(), jogo.getPlacarB());
     }
 }

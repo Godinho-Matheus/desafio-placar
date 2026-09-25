@@ -70,13 +70,13 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Habilitar a exposiÃ§Ã£o da Swagger UI no Payara.
     - _Requisitos: 10.1, 10.2_
 
-- [ ] 6. Redis e `PlacarCache`
+- [x] 6. Redis e `PlacarCache`
   - [x] 6.1 Implementar `PlacarAtual` e `PlacarCache` sobre Redis
     - Criar o record `PlacarAtual` (placarA, placarB) e a classe `PlacarCache` no pacote `cache` com `atualizar`, `ler` e `invalidar`, usando a chave `jogo:{id}:placar` e valor JSON `{"placarA","placarB"}`.
     - `ler(jogoId)` retorna `Optional` com o placar quando encontrado e vazio quando nÃ£o houver cache OU o Redis nÃ£o puder ser usado; registrar em log as falhas de integraÃ§Ã£o com Redis. Sem novos tipos de retorno, sem circuit breaker e sem retry.
     - Externalizar a configuraÃ§Ã£o do Redis (integrada ao pacote `config`).
     - _Requisitos: 7.2, 7.3, 7.4, 13.2_
-  - [ ] 6.2 Integrar leitura de placar em `JogoService.obterPlacarAtual`
+  - [x] 6.2 Integrar leitura de placar em `JogoService.obterPlacarAtual`
     - Implementar `obterPlacarAtual(jogoId)` no `JogoService`: chamar `PlacarCache.ler(jogoId)` e, se retornar vazio, buscar o placar no PostgreSQL. NÃ£o distinguir cache MISS de indisponibilidade do Redis.
     - _Requisitos: 7.3, 7.4_
 
