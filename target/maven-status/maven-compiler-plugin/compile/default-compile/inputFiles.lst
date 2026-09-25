@@ -11,8 +11,12 @@ D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\JogoEncer
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\NaoEncontradoExceptionMapper.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\mapper\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\api\package-info.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\cache\package-info.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\cache\PlacarAtual.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\cache\PlacarCache.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoBancoDados.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoExterna.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoRedis.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\JaxRsApplication.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\EntradaInvalidaException.java

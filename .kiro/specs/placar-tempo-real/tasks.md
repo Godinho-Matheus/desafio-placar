@@ -71,7 +71,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - _Requisitos: 10.1, 10.2_
 
 - [ ] 6. Redis e `PlacarCache`
-  - [ ] 6.1 Implementar `PlacarAtual` e `PlacarCache` sobre Redis
+  - [x] 6.1 Implementar `PlacarAtual` e `PlacarCache` sobre Redis
     - Criar o record `PlacarAtual` (placarA, placarB) e a classe `PlacarCache` no pacote `cache` com `atualizar`, `ler` e `invalidar`, usando a chave `jogo:{id}:placar` e valor JSON `{"placarA","placarB"}`.
     - `ler(jogoId)` retorna `Optional` com o placar quando encontrado e vazio quando nÃ£o houver cache OU o Redis nÃ£o puder ser usado; registrar em log as falhas de integraÃ§Ã£o com Redis. Sem novos tipos de retorno, sem circuit breaker e sem retry.
     - Externalizar a configuraÃ§Ã£o do Redis (integrada ao pacote `config`).

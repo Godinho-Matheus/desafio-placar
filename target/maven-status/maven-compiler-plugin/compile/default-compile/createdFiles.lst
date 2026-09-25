@@ -2,10 +2,12 @@ com\desafio\placar\api\mapper\NaoEncontradoExceptionMapper.class
 com\desafio\placar\service\JogoService.class
 com\desafio\placar\domain\excecao\JogoEncerradoException.class
 com\desafio\placar\domain\Status.class
+com\desafio\placar\config\ConfiguracaoRedis.class
 com\desafio\placar\api\dto\JogoResponse.class
 com\desafio\placar\domain\Jogo.class
 com\desafio\placar\config\package-info.class
 com\desafio\placar\api\dto\CriarJogoRequest.class
+com\desafio\placar\cache\package-info.class
 com\desafio\placar\domain\package-info.class
 com\desafio\placar\api\mapper\EntradaInvalidaExceptionMapper.class
 com\desafio\placar\api\mapper\ErroGenericoExceptionMapper.class
@@ -16,6 +18,7 @@ com\desafio\placar\api\dto\AtualizarStatusRequest.class
 com\desafio\placar\api\package-info.class
 com\desafio\placar\api\JogoResource.class
 com\desafio\placar\api\mapper\package-info.class
+com\desafio\placar\cache\PlacarAtual.class
 com\desafio\placar\config\ConfiguracaoBancoDados.class
 com\desafio\placar\domain\excecao\EntradaInvalidaException.class
 com\desafio\placar\persistence\package-info.class
@@ -25,5 +28,6 @@ com\desafio\placar\api\dto\package-info.class
 com\desafio\placar\package-info.class
 com\desafio\placar\persistence\JogoRepository.class
 com\desafio\placar\config\JaxRsApplication.class
+com\desafio\placar\cache\PlacarCache.class
 com\desafio\placar\domain\excecao\package-info.class
 com\desafio\placar\service\package-info.class
