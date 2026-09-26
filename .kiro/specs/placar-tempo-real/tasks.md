@@ -95,8 +95,8 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Tentar invalidar o Redis (`PlacarCache.invalidar`) com tratamento de erro em log; independentemente, tentar publicar via `PlacarEventPublisher` com tratamento de erro em log; erros apenas em log, nÃ£o desfazer o commit.
     - _Requisitos: 7.1, 7.5_
 
-- [ ] 8. Consumer RabbitMQ e atualizaÃ§Ã£o do Redis
-  - [ ] 8.1 Implementar o `PlacarEventConsumer`
+- [x] 8. Consumer RabbitMQ e atualizaÃ§Ã£o do Redis
+  - [x] 8.1 Implementar o `PlacarEventConsumer`
     - Criar `PlacarEventConsumer` no pacote `messaging` como bean `@Startup`/`@PreDestroy`: abrir conexÃ£o/canal, consumir `placar.atualizado.queue`, desserializar `EventoPlacar` e gravar placarA/placarB no Redis via `PlacarCache.atualizar`; liberar recursos no encerramento.
     - _Requisitos: 7.2_
 

@@ -26,6 +26,7 @@ com\desafio\placar\cache\PlacarAtual.class
 com\desafio\placar\config\ConfiguracaoBancoDados.class
 com\desafio\placar\messaging\PlacarEventPublisher.class
 com\desafio\placar\domain\excecao\EntradaInvalidaException.class
+com\desafio\placar\messaging\PlacarEventConsumer.class
 com\desafio\placar\persistence\package-info.class
 com\desafio\placar\domain\excecao\NaoEncontradoException.class
 com\desafio\placar\api\dto\ErroResponse.class
