@@ -19,6 +19,12 @@
 <body>
     <h1>Jogos</h1>
 
+    <!-- Componente auxiliar neutro que hospeda o AjaxSelfUpdatingTimerBehavior
+         (polling). Fica FORA da tabela e FORA de todos os formularios: a cada
+         ciclo o timer re-renderiza apenas este elemento, e o codigo adiciona ao
+         alvo Ajax somente os rotulos de placar que mudaram. Nao exibe conteudo. -->
+    <span wicket:id="pollingTrigger"></span>
+
     <!-- Mensagens ao usuario (erros de dominio e mensagens genericas). -->
     <div wicket:id="feedback" class="feedback"></div>
 
@@ -51,6 +57,13 @@
                 <td wicket:id="id">1</td>
                 <td wicket:id="timeA">Time A</td>
                 <td wicket:id="timeB">Time B</td>
+                <!-- Rotulos de EXIBICAO (somente leitura) dos placares. Sao atualizados
+                     automaticamente pelo polling (AjaxSelfUpdatingTimerBehavior hospedado
+                     no componente auxiliar pollingTrigger) via jogoService.obterPlacarAtual(jogoId),
+                     sem recarregamento manual. Apenas estes rotulos entram no alvo Ajax;
+                     a linha e o PlacarPanel nunca sao re-renderizados pelo polling.
+                     Os campos editaveis de placar ficam no PlacarPanel (coluna Acoes)
+                     e NAO sao tocados pelo polling. -->
                 <td wicket:id="placarA">0</td>
                 <td wicket:id="placarB">0</td>
                 <td wicket:id="status">EM_ANDAMENTO</td>

@@ -14,7 +14,13 @@
  * atualizacao manual de placar e encerramento, com um {@code FeedbackPanel} para
  * exibir mensagens ao usuario.</p>
  *
- * <p>Resta apenas a atualizacao automatica via polling
- * ({@code AjaxSelfUpdatingTimerBehavior}), prevista para a Task 10.</p>
+ * <p>A atualizacao automatica dos placares via polling ja esta implementada: a
+ * {@link com.desafio.placar.web.JogosPage} hospeda um
+ * {@code AjaxSelfUpdatingTimerBehavior} que, em intervalo configuravel (sem SLA),
+ * chama {@code JogoService.obterPlacarAtual(jogoId)} (Redis primeiro, com fallback
+ * no PostgreSQL dentro do servico) e repinta somente os placares exibidos, sem
+ * recarregamento manual, sem recriar a lista e sem tocar nos campos editaveis do
+ * {@code PlacarPanel}. O status continua vindo do estado completo do Jogo no
+ * PostgreSQL, atualizado pelas operacoes da interface, nao pelo polling.</p>
  */
 package com.desafio.placar.web;

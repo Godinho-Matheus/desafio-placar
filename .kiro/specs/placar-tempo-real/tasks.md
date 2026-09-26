@@ -120,8 +120,8 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Tratar erro exibindo a mensagem recebida (via `FeedbackPanel`) e mantendo os valores anteriores; todas as chamadas via `JogoService`.
     - _Requisitos: 6.2, 9.2, 9.3, 9.5_
 
-- [ ] 10. Polling automÃ¡tico dos placares
-  - [ ] 10.1 Adicionar `AjaxSelfUpdatingTimerBehavior` Ã  `JogosPage`
+- [x] 10. Polling automÃ¡tico dos placares
+  - [x] 10.1 Adicionar `AjaxSelfUpdatingTimerBehavior` Ã  `JogosPage`
     - Registrar o `AjaxSelfUpdatingTimerBehavior` na `JogosPage` chamando `JogoService.obterPlacarAtual(jogoId)` com intervalo configurÃ¡vel (sem SLA), atualizando apenas os placares exibidos sem recarregamento manual.
     - O status faz parte do estado completo do Jogo no PostgreSQL e Ã© atualizado normalmente pelas operaÃ§Ãµes da interface (criaÃ§Ã£o, atualizaÃ§Ã£o de placar, encerramento), nÃ£o pelo polling.
     - _Requisitos: 8.1_

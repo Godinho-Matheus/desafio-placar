@@ -13,6 +13,7 @@ com\desafio\placar\web\package-info.class
 com\desafio\placar\api\JogoResource.class
 com\desafio\placar\api\mapper\package-info.class
 com\desafio\placar\cache\PlacarAtual.class
+com\desafio\placar\web\JogosPage$3.class
 com\desafio\placar\web\CriarJogoPanel$1.class
 com\desafio\placar\config\ConfiguracaoBancoDados.class
 com\desafio\placar\messaging\PlacarEventPublisher.class
