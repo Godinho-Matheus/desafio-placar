@@ -11,9 +11,11 @@ import com.desafio.placar.domain.Status;
 import com.desafio.placar.domain.excecao.EntradaInvalidaException;
 import com.desafio.placar.domain.excecao.JogoEncerradoException;
 import com.desafio.placar.domain.excecao.NaoEncontradoException;
+import com.desafio.placar.messaging.PlacarAtualizadoEvent;
 import com.desafio.placar.persistence.JogoRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
@@ -36,24 +38,32 @@ public class JogoService {
 
     private final PlacarCache placarCache;
 
+    private final Event<PlacarAtualizadoEvent> placarAtualizadoEvent;
+
     /**
      * Construtor padrao exigido pelo CDI.
      */
     protected JogoService() {
         this.repository = null;
         this.placarCache = null;
+        this.placarAtualizadoEvent = null;
     }
 
     /**
-     * Cria o servico com o repositorio de Jogos e o cache de placar.
+     * Cria o servico com o repositorio de Jogos, o cache de placar e o
+     * disparador do evento CDI interno de atualizacao de placar.
      *
-     * @param repository  repositorio JPA de Jogos
-     * @param placarCache cache Redis de placar atual
+     * @param repository            repositorio JPA de Jogos
+     * @param placarCache           cache Redis de placar atual
+     * @param placarAtualizadoEvent disparador do evento CDI interno
+     *                              {@link PlacarAtualizadoEvent}
      */
     @Inject
-    public JogoService(JogoRepository repository, PlacarCache placarCache) {
+    public JogoService(JogoRepository repository, PlacarCache placarCache,
+            Event<PlacarAtualizadoEvent> placarAtualizadoEvent) {
         this.repository = repository;
         this.placarCache = placarCache;
+        this.placarAtualizadoEvent = placarAtualizadoEvent;
     }
 
     /**
@@ -159,7 +169,10 @@ public class JogoService {
      * encerrada nao pode ter o placar alterado.</p>
      *
      * <p>A operacao e transacional (JTA): a carga, a validacao da regra de
-     * negocio e a persistencia do novo placar ocorrem na mesma transacao.</p>
+     * negocio e a persistencia do novo placar ocorrem na mesma transacao. Apos a
+     * persistencia, ainda dentro da transacao, dispara o evento CDI interno
+     * {@link PlacarAtualizadoEvent} (a ser observado em AFTER_SUCCESS, ou seja,
+     * apos o commit).</p>
      *
      * @param id      identificador do Jogo
      * @param placarA novo placar do time da casa (inteiro maior ou igual a 0)
@@ -191,9 +204,13 @@ public class JogoService {
         jogo.setPlacarB(placarB);
         Jogo atualizado = repository.salvar(jogo);
 
-        // Ponto de disparo do evento CDI reservado: o Event.fire(...) do
-        // PlacarAtualizadoEvent (dentro desta transacao, apos a persistencia)
-        // sera adicionado na tarefa 7.1.
+        // Dispara o evento CDI interno dentro da transacao, apos a persistencia
+        // do novo placar. O observer AFTER_SUCCESS (tarefa 7.3) reagira apos o commit.
+        placarAtualizadoEvent.fire(
+                new PlacarAtualizadoEvent(
+                        atualizado.getId(),
+                        atualizado.getPlacarA(),
+                        atualizado.getPlacarB()));
 
         return atualizado;
     }

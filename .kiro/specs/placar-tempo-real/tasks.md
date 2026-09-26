@@ -81,7 +81,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - _Requisitos: 7.3, 7.4_
 
 - [ ] 7. Evento CDI, publicaÃ§Ã£o RabbitMQ e processamento AFTER_SUCCESS
-  - [ ] 7.1 Criar `PlacarAtualizadoEvent` e disparÃ¡-lo em `atualizarPlacar`
+  - [x] 7.1 Criar `PlacarAtualizadoEvent` e disparÃ¡-lo em `atualizarPlacar`
     - Criar o evento CDI interno `PlacarAtualizadoEvent` (jogoId, placarA, placarB) no pacote `service`.
     - Disparar o evento via `Event.fire(...)` dentro da transaÃ§Ã£o de `JogoService.atualizarPlacar` apÃ³s a persistÃªncia.
     - _Requisitos: 4.3, 7.1_
