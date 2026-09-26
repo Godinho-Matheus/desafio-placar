@@ -30,6 +30,7 @@ D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\Status.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\EventoPlacar.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\PlacarAtualizadoEvent.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\PlacarAtualizadoObserver.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\PlacarEventPublisher.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\persistence\JogoRepository.java

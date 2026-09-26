@@ -5,10 +5,9 @@ package com.desafio.placar.messaging;
  *
  * <p>E disparado por {@code JogoService.atualizarPlacar(...)} via
  * {@link jakarta.enterprise.event.Event#fire(Object)} <strong>dentro da transacao</strong>,
- * logo apos a persistencia do novo placar. A intencao e que um observador (introduzido
- * em tarefa posterior) reaja apenas em
- * {@link jakarta.enterprise.event.TransactionPhase#AFTER_SUCCESS}, ou seja, somente
- * depois do commit.</p>
+ * logo apos a persistencia do novo placar. O {@link PlacarAtualizadoObserver} reage a ele
+ * apenas em {@link jakarta.enterprise.event.TransactionPhase#AFTER_SUCCESS}, ou seja,
+ * somente depois do commit.</p>
  *
  * <p>Carrega <strong>somente</strong> {@code jogoId}, {@code placarA} e {@code placarB}:
  * o minimo necessario para reagir a mudanca de placar. Nao inclui a entidade Jogo, times,

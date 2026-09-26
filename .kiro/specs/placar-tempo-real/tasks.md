@@ -80,7 +80,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Implementar `obterPlacarAtual(jogoId)` no `JogoService`: chamar `PlacarCache.ler(jogoId)` e, se retornar vazio, buscar o placar no PostgreSQL. NÃ£o distinguir cache MISS de indisponibilidade do Redis.
     - _Requisitos: 7.3, 7.4_
 
-- [ ] 7. Evento CDI, publicaÃ§Ã£o RabbitMQ e processamento AFTER_SUCCESS
+- [x] 7. Evento CDI, publicaÃ§Ã£o RabbitMQ e processamento AFTER_SUCCESS
   - [x] 7.1 Criar `PlacarAtualizadoEvent` e disparÃ¡-lo em `atualizarPlacar`
     - Criar o evento CDI interno `PlacarAtualizadoEvent` (jogoId, placarA, placarB) no pacote `service`.
     - Disparar o evento via `Event.fire(...)` dentro da transaÃ§Ã£o de `JogoService.atualizarPlacar` apÃ³s a persistÃªncia.
@@ -90,7 +90,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Criar `PlacarEventPublisher` publicando em `placar.exchange` (direct) com routing key `placar.atualizado`; declarar a topologia (exchange, queue `placar.atualizado.queue`, binding).
     - Externalizar a configuraÃ§Ã£o do RabbitMQ (integrada ao pacote `config`).
     - _Requisitos: 7.1, 13.2_
-  - [ ] 7.3 Implementar o `PlacarAtualizadoObserver` (AFTER_SUCCESS)
+  - [x] 7.3 Implementar o `PlacarAtualizadoObserver` (AFTER_SUCCESS)
     - Criar `PlacarAtualizadoObserver` no pacote `service` com `@Observes(during = TransactionPhase.AFTER_SUCCESS)`; depende de `PlacarCache` e `PlacarEventPublisher`.
     - Tentar invalidar o Redis (`PlacarCache.invalidar`) com tratamento de erro em log; independentemente, tentar publicar via `PlacarEventPublisher` com tratamento de erro em log; erros apenas em log, nÃ£o desfazer o commit.
     - _Requisitos: 7.1, 7.5_
