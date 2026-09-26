@@ -16,6 +16,7 @@ D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\cache\PlacarAtual.ja
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\cache\PlacarCache.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoBancoDados.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoExterna.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoRabbitMq.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\ConfiguracaoRedis.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\JaxRsApplication.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\config\package-info.java
@@ -26,8 +27,10 @@ D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\excecao\packa
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\Jogo.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\domain\Status.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\EventoPlacar.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\PlacarAtualizadoEvent.java
+D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\messaging\PlacarEventPublisher.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\package-info.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\persistence\JogoRepository.java
 D:\PROJETOS\Desafio-Placar\src\main\java\com\desafio\placar\persistence\package-info.java

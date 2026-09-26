@@ -85,7 +85,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Criar o evento CDI interno `PlacarAtualizadoEvent` (jogoId, placarA, placarB) no pacote `service`.
     - Disparar o evento via `Event.fire(...)` dentro da transaÃ§Ã£o de `JogoService.atualizarPlacar` apÃ³s a persistÃªncia.
     - _Requisitos: 4.3, 7.1_
-  - [ ] 7.2 Implementar `EventoPlacar` e `PlacarEventPublisher`
+  - [x] 7.2 Implementar `EventoPlacar` e `PlacarEventPublisher`
     - Criar o record `EventoPlacar` (jogoId, placarA, placarB) no pacote `messaging` com serializaÃ§Ã£o JSON.
     - Criar `PlacarEventPublisher` publicando em `placar.exchange` (direct) com routing key `placar.atualizado`; declarar a topologia (exchange, queue `placar.atualizado.queue`, binding).
     - Externalizar a configuraÃ§Ã£o do RabbitMQ (integrada ao pacote `config`).

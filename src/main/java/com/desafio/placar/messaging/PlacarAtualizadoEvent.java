@@ -14,8 +14,8 @@ package com.desafio.placar.messaging;
  * o minimo necessario para reagir a mudanca de placar. Nao inclui a entidade Jogo, times,
  * status, data/hora, nem detalhes de Redis ou RabbitMQ.</p>
  *
- * <p><strong>Importante:</strong> este NAO e a mensagem publicada no RabbitMQ. A mensagem
- * de mensageria ({@code EventoPlacar}) e um artefato distinto, criado em tarefa futura.</p>
+ * <p><strong>Importante:</strong> este NAO e a mensagem publicada no RabbitMQ.
+ * A mensagem de mensageria ({@code EventoPlacar}) e um artefato distinto.</p>
  *
  * @param jogoId  identificador do Jogo cujo placar foi atualizado
  * @param placarA novo placar do time da casa (inteiro maior ou igual a 0)
