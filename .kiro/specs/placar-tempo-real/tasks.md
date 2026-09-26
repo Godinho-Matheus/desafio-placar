@@ -100,21 +100,21 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Criar `PlacarEventConsumer` no pacote `messaging` como bean `@Startup`/`@PreDestroy`: abrir conexÃ£o/canal, consumir `placar.atualizado.queue`, desserializar `EventoPlacar` e gravar placarA/placarB no Redis via `PlacarCache.atualizar`; liberar recursos no encerramento.
     - _Requisitos: 7.2_
 
-- [ ] 9. Interface Apache Wicket (operaÃ§Ãµes)
-  - [ ] 9.1 Configurar a aplicaÃ§Ã£o Apache Wicket (bootstrap)
+- [x] 9. Interface Apache Wicket (operaÃ§Ãµes)
+  - [x] 9.1 Configurar a aplicaÃ§Ã£o Apache Wicket (bootstrap)
     - Criar/configurar a `WebApplication` do Wicket e registrar/configurar o Wicket na aplicaÃ§Ã£o web (filtro/servlet no `web.xml` ou equivalente).
     - Habilitar o uso de beans CDI nas pÃ¡ginas/componentes Wicket (especialmente `JogoService`) via a integraÃ§Ã£o Wicket-CDI; integraÃ§Ã£o simples e compatÃ­vel com Jakarta EE/Payara.
     - Criar um esqueleto mÃ­nimo de `JogosPage` (pÃ¡gina Wicket vazia/placeholder com seu markup mÃ­nimo) apenas para que o projeto compile e a aplicaÃ§Ã£o Wicket tenha uma home page vÃ¡lida, e defini-la como pÃ¡gina inicial (home page).
     - Deixar explÃ­cito que este esqueleto NÃƒO implementa listagem, filtro, criaÃ§Ã£o, atualizaÃ§Ã£o de placar, encerramento nem polling â€” essas funcionalidades permanecem exclusivamente nas subtasks 9.2, 9.3, 9.4 e 10.1.
     - Objetivo: ao concluir a 9.1, o projeto continua compilÃ¡vel e a aplicaÃ§Ã£o Wicket tem uma home page vÃ¡lida.
     - _Requisitos: 8, 9_
-  - [ ] 9.2 Criar a `JogosPage` com listagem e filtro
+  - [x] 9.2 Criar a `JogosPage` com listagem e filtro
     - Criar `JogosPage` no pacote `web` listando jogos via `JogoService` (dados completos do PostgreSQL) e oferecendo filtro por status. Wicket chama `JogoService` diretamente (nunca a API REST).
     - _Requisitos: 9.4_
-  - [ ] 9.3 Criar o `CriarJogoPanel`
+  - [x] 9.3 Criar o `CriarJogoPanel`
     - Criar `CriarJogoPanel` no pacote `web` para criar jogo informando timeA, timeB e dataHoraPartida, exibindo o jogo criado com placar 0x0 e EM_ANDAMENTO.
     - _Requisitos: 9.1_
-  - [ ] 9.4 Criar o `PlacarPanel` e a aÃ§Ã£o de encerrar com tratamento de erro
+  - [x] 9.4 Criar o `PlacarPanel` e a aÃ§Ã£o de encerrar com tratamento de erro
     - Criar `PlacarPanel` no pacote `web` para atualizar placar de jogos EM_ANDAMENTO, com o controle desabilitado para jogos ENCERRADO.
     - Adicionar a aÃ§Ã£o de encerrar jogo (exibindo status ENCERRADO apÃ³s sucesso).
     - Tratar erro exibindo a mensagem recebida (via `FeedbackPanel`) e mantendo os valores anteriores; todas as chamadas via `JogoService`.

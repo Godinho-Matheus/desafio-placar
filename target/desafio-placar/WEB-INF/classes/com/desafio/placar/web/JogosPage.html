@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Jogos</title>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; margin: 24px; color: #222; }
+        h1 { margin-bottom: 16px; }
+        .feedback { margin: 12px 0; }
+        .feedback ul { list-style: none; padding: 0; margin: 0; }
+        .feedback li { color: #b00020; margin: 4px 0; }
+        .filtro { margin: 16px 0; }
+        .filtro label { margin-right: 8px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Jogos</h1>
+
+    <!-- Mensagens ao usuario (erros de dominio e mensagens genericas). -->
+    <div wicket:id="feedback" class="feedback"></div>
+
+    <!-- Painel de criacao de Jogo (submit sincrono simples, sem Ajax). -->
+    <div wicket:id="criarJogoPanel"></div>
+
+    <!-- Filtro por status: submit sincrono simples (sem Ajax). -->
+    <form wicket:id="filtroForm" class="filtro">
+        <label for="filtroStatus">Status:</label>
+        <select wicket:id="filtroStatus" id="filtroStatus"></select>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <!-- Listagem dos jogos (dados completos vindos do PostgreSQL via JogoService). -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Time A</th>
+                <th>Time B</th>
+                <th>Placar A</th>
+                <th>Placar B</th>
+                <th>Status</th>
+                <th>Data/Hora</th>
+                <th>Acoes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr wicket:id="jogos">
+                <td wicket:id="id">1</td>
+                <td wicket:id="timeA">Time A</td>
+                <td wicket:id="timeB">Time B</td>
+                <td wicket:id="placarA">0</td>
+                <td wicket:id="placarB">0</td>
+                <td wicket:id="status">EM_ANDAMENTO</td>
+                <td wicket:id="dataHoraPartida">01/01/2025 00:00</td>
+                <td wicket:id="placarPanel"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
