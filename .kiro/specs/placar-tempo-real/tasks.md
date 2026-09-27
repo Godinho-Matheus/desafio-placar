@@ -140,7 +140,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - Controle de atualizaÃ§Ã£o desabilitado em jogo ENCERRADO; um ciclo do `AjaxSelfUpdatingTimerBehavior` rerenderiza o placar com o novo valor.
     - _Requisitos: 6.2, 8, 9_
 
-- [ ] 12. Checkpoint â€” Garantir que a implementaÃ§Ã£o esteja integrada
+- [x] 12. Checkpoint â€” Garantir que a implementaÃ§Ã£o esteja integrada
   - Executar o build Maven; executar os testes existentes, se houver; verificar se os componentes implementados estÃ£o integrados; corrigir apenas problemas de integraÃ§Ã£o encontrados.
 
 - [ ] 13. ConfiguraÃ§Ã£o, execuÃ§Ã£o e README
