@@ -45,6 +45,7 @@
 
         <!-- Testes -->
         <junit.jupiter.version>5.11.3</junit.jupiter.version>
+        <parsson.version>1.1.7</parsson.version>
 
         <!-- Plugins -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
@@ -127,6 +128,21 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            Eclipse Parsson: implementacao de referencia do Jakarta JSON Processing (JSON-P 2.1).
+            Adicionada APENAS com escopo "test" para fornecer o PROVIDER de JSON-P em runtime
+            durante os testes unitarios (a jakarta.jakartaee-api e "provided", logo traz somente
+            a API de JSON-P para o classpath de teste, sem implementacao). Em producao o Payara
+            fornece o Parsson nativamente. NAO e framework de mock/assercao/teste de integracao e
+            NAO e empacotada no WAR (o escopo "test" garante que fica fora do WEB-INF/lib).
+        -->
+        <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
+            <version>${parsson.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

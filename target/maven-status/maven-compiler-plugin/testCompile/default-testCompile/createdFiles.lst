@@ -1,4 +1,9 @@
+com\desafio\placar\messaging\FakePlacarCache.class
 com\desafio\placar\service\FakePlacarCache.class
+com\desafio\placar\messaging\FakePlacarEventPublisher.class
+com\desafio\placar\messaging\PlacarAtualizadoObserverTest.class
 com\desafio\placar\service\CapturingEvent.class
+com\desafio\placar\messaging\PlacarEventConsumerTest.class
 com\desafio\placar\service\FakeJogoRepository.class
+com\desafio\placar\messaging\FakePlacarCache$Atualizacao.class
 com\desafio\placar\service\JogoServiceTest.class

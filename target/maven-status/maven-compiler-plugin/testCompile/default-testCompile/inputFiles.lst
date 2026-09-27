@@ -1,3 +1,7 @@
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\messaging\FakePlacarCache.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\messaging\FakePlacarEventPublisher.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\messaging\PlacarAtualizadoObserverTest.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\messaging\PlacarEventConsumerTest.java
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\CapturingEvent.java
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\FakeJogoRepository.java
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\FakePlacarCache.java

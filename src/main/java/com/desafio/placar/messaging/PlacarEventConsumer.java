@@ -176,7 +176,7 @@ public class PlacarEventConsumer {
      *
      * @param body corpo bruto da mensagem, JSON em UTF-8
      */
-    private void processar(byte[] body) {
+    void processar(byte[] body) {
         try {
             String json = new String(body, StandardCharsets.UTF_8);
             EventoPlacar evento = desserializar(json);

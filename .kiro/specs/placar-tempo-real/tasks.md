@@ -130,7 +130,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
   - [x]* 11.1 Testes unitÃ¡rios das regras de negÃ³cio do `JogoService`
     - CriaÃ§Ã£o inicia 0x0/EM_ANDAMENTO; atualizaÃ§Ã£o persiste o novo placar; atualizaÃ§Ã£o dispara `PlacarAtualizadoEvent` com jogoId/placarA/placarB corretos (observando o evento CDI, sem publicar no RabbitMQ); jogo ENCERRADO rejeita alteraÃ§Ã£o; encerramento preserva placar; encerramento idempotente; filtro por status retorna os jogos corretos.
     - _Requisitos: 12.1_
-  - [ ]* 11.2 Testes do observer e do consumer
+  - [x]* 11.2 Testes do observer e do consumer
     - Observer tenta invalidar e publicar mesmo com falha na invalidaÃ§Ã£o (cache/publisher falsos, verificando log); Consumer atualiza o Redis ao receber `EventoPlacar`.
     - _Requisitos: 12.3_
   - [ ]* 11.3 Testes da API REST
