@@ -127,7 +127,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - _Requisitos: 8.1_
 
 - [ ] 11. Testes (diferenciais/opcionais â€” JUnit)
-  - [ ]* 11.1 Testes unitÃ¡rios das regras de negÃ³cio do `JogoService`
+  - [x]* 11.1 Testes unitÃ¡rios das regras de negÃ³cio do `JogoService`
     - CriaÃ§Ã£o inicia 0x0/EM_ANDAMENTO; atualizaÃ§Ã£o persiste o novo placar; atualizaÃ§Ã£o dispara `PlacarAtualizadoEvent` com jogoId/placarA/placarB corretos (observando o evento CDI, sem publicar no RabbitMQ); jogo ENCERRADO rejeita alteraÃ§Ã£o; encerramento preserva placar; encerramento idempotente; filtro por status retorna os jogos corretos.
     - _Requisitos: 12.1_
   - [ ]* 11.2 Testes do observer e do consumer
