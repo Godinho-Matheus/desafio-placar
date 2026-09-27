@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
@@ -77,9 +77,9 @@ public class PlacarPanel extends Panel {
             }
         };
 
-        TextField<Integer> placarA = new TextField<>("placarA", placarAModel, Integer.class);
+        NumberTextField<Integer> placarA = new NumberTextField<>("placarA", placarAModel, Integer.class);
         placarA.setRequired(true);
-        TextField<Integer> placarB = new TextField<>("placarB", placarBModel, Integer.class);
+        NumberTextField<Integer> placarB = new NumberTextField<>("placarB", placarBModel, Integer.class);
         placarB.setRequired(true);
 
         Button atualizarBotao = new Button("atualizarBotao");
