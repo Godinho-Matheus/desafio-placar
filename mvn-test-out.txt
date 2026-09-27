@@ -23,13 +23,25 @@
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
+[INFO] Running com.desafio.placar.api.JogoResourceTest
+[INFO] Running com.desafio.placar.api.JogoResourceTest$AtualizarPlacar
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.132 s -- in com.desafio.placar.api.JogoResourceTest$AtualizarPlacar
+[INFO] Running com.desafio.placar.api.JogoResourceTest$AtualizarStatus
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.desafio.placar.api.JogoResourceTest$AtualizarStatus
+[INFO] Running com.desafio.placar.api.JogoResourceTest$BuscarPorId
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.desafio.placar.api.JogoResourceTest$BuscarPorId
+[INFO] Running com.desafio.placar.api.JogoResourceTest$Criar
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.desafio.placar.api.JogoResourceTest$Criar
+[INFO] Running com.desafio.placar.api.JogoResourceTest$Listar
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.desafio.placar.api.JogoResourceTest$Listar
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.208 s -- in com.desafio.placar.api.JogoResourceTest
 [INFO] Running com.desafio.placar.messaging.PlacarAtualizadoObserverTest
-set. 27, 2026 8:16:46 AM com.desafio.placar.messaging.PlacarAtualizadoObserver observar
+set. 27, 2026 11:33:53 AM com.desafio.placar.messaging.PlacarAtualizadoObserver observar
 WARNING: Falha ao invalidar placar no Redis; seguindo para publicacao
 java.lang.RuntimeException: falha simulada na invalidacao
 	at com.desafio.placar.messaging.FakePlacarCache.invalidar(FakePlacarCache.java:41)
 	at com.desafio.placar.messaging.PlacarAtualizadoObserver.observar(PlacarAtualizadoObserver.java:80)
-	at com.desafio.placar.messaging.PlacarAtualizadoObserverTest.lambda$0(PlacarAtualizadoObserverTest.java:67)
+	at com.desafio.placar.messaging.PlacarAtualizadoObserverTest.lambda$observer_devePublicarMesmoQuandoInvalidacaoFalhar$0(PlacarAtualizadoObserverTest.java:67)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:49)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:40)
 	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3218)
@@ -104,12 +116,12 @@ java.lang.RuntimeException: falha simulada na invalidacao
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 
-set. 27, 2026 8:16:46 AM com.desafio.placar.messaging.PlacarAtualizadoObserver observar
+set. 27, 2026 11:33:53 AM com.desafio.placar.messaging.PlacarAtualizadoObserver observar
 WARNING: Falha ao publicar EventoPlacar no RabbitMQ
 java.lang.RuntimeException: falha simulada na publicacao
 	at com.desafio.placar.messaging.FakePlacarEventPublisher.publicar(FakePlacarEventPublisher.java:28)
 	at com.desafio.placar.messaging.PlacarAtualizadoObserver.observar(PlacarAtualizadoObserver.java:86)
-	at com.desafio.placar.messaging.PlacarAtualizadoObserverTest.lambda$1(PlacarAtualizadoObserverTest.java:98)
+	at com.desafio.placar.messaging.PlacarAtualizadoObserverTest.lambda$observer_naoDevePropagarFalhaDoPublisher$1(PlacarAtualizadoObserverTest.java:98)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:49)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:40)
 	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3218)
@@ -184,9 +196,9 @@ java.lang.RuntimeException: falha simulada na publicacao
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in com.desafio.placar.messaging.PlacarAtualizadoObserverTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.desafio.placar.messaging.PlacarAtualizadoObserverTest
 [INFO] Running com.desafio.placar.messaging.PlacarEventConsumerTest
-set. 27, 2026 8:16:46 AM com.desafio.placar.messaging.PlacarEventConsumer processar
+set. 27, 2026 11:33:53 AM com.desafio.placar.messaging.PlacarEventConsumer processar
 WARNING: Mensagem de placar invalida ignorada
 jakarta.json.stream.JsonParsingException: Unexpected char 111 at (line no=1, column no=4, offset=3), expecting 'u'
 	at org.eclipse.parsson.JsonTokenizer.expectedChar(JsonTokenizer.java:599)
@@ -199,7 +211,7 @@ jakarta.json.stream.JsonParsingException: Unexpected char 111 at (line no=1, col
 	at org.eclipse.parsson.JsonReaderImpl.readObject(JsonReaderImpl.java:85)
 	at com.desafio.placar.messaging.PlacarEventConsumer.desserializar(PlacarEventConsumer.java:195)
 	at com.desafio.placar.messaging.PlacarEventConsumer.processar(PlacarEventConsumer.java:182)
-	at com.desafio.placar.messaging.PlacarEventConsumerTest.lambda$0(PlacarEventConsumerTest.java:53)
+	at com.desafio.placar.messaging.PlacarEventConsumerTest.lambda$consumer_deveIgnorarMensagemInvalida$0(PlacarEventConsumerTest.java:53)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:49)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:40)
 	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3218)
@@ -274,17 +286,17 @@ jakarta.json.stream.JsonParsingException: Unexpected char 111 at (line no=1, col
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in com.desafio.placar.messaging.PlacarEventConsumerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.desafio.placar.messaging.PlacarEventConsumerTest
 [INFO] Running com.desafio.placar.service.JogoServiceTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.desafio.placar.service.JogoServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.desafio.placar.service.JogoServiceTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.835 s
-[INFO] Finished at: 2026-09-27T08:16:47-03:00
+[INFO] Total time:  3.486 s
+[INFO] Finished at: 2026-09-27T11:33:53-03:00
 [INFO] ------------------------------------------------------------------------

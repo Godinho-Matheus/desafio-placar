@@ -55,8 +55,24 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class JogoResource {
 
+    private final JogoService jogoService;
+
+    /**
+     * Construtor padrao exigido pelo CDI.
+     */
+    protected JogoResource() {
+        this.jogoService = null;
+    }
+
+    /**
+     * Cria o recurso REST com o servico de aplicacao de Jogos.
+     *
+     * @param jogoService servico de aplicacao de Jogos
+     */
     @Inject
-    private JogoService jogoService;
+    public JogoResource(JogoService jogoService) {
+        this.jogoService = jogoService;
+    }
 
     /**
      * Cria um novo Jogo.

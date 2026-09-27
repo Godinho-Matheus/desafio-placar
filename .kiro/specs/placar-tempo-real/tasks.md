@@ -133,7 +133,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
   - [x]* 11.2 Testes do observer e do consumer
     - Observer tenta invalidar e publicar mesmo com falha na invalidaÃ§Ã£o (cache/publisher falsos, verificando log); Consumer atualiza o Redis ao receber `EventoPlacar`.
     - _Requisitos: 12.3_
-  - [ ]* 11.3 Testes da API REST
+  - [x]* 11.3 Testes da API REST
     - Exercitar contratos e cÃ³digos (201/200/400/404/409), o corpo `{"status":"ENCERRADO"}` do `PUT /status` e a idempotÃªncia do encerramento.
     - _Requisitos: 12.2_
   - [ ]* 11.4 Testes de UI com WicketTester

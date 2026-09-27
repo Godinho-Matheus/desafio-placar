@@ -46,6 +46,7 @@
         <!-- Testes -->
         <junit.jupiter.version>5.11.3</junit.jupiter.version>
         <parsson.version>1.1.7</parsson.version>
+        <jersey.version>4.0.2</jersey.version>
 
         <!-- Plugins -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
@@ -143,6 +144,19 @@
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
             <version>${parsson.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            jersey-common (test): fornece um RuntimeDelegate concreto do JAX-RS para que
+            Response.ok(...)/Response.status(...) e os ExceptionMappers consigam construir
+            objetos Response durante os testes unitarios (em producao o Payara fornece isso
+            em runtime). Escopo "test" apenas — NAO e empacotado no WAR. Sem jersey-server.
+        -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
