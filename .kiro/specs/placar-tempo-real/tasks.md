@@ -143,11 +143,11 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
 - [x] 12. Checkpoint â€” Garantir que a implementaÃ§Ã£o esteja integrada
   - Executar o build Maven; executar os testes existentes, se houver; verificar se os componentes implementados estÃ£o integrados; corrigir apenas problemas de integraÃ§Ã£o encontrados.
 
-- [ ] 13. ConfiguraÃ§Ã£o, execuÃ§Ã£o e README
+- [x] 13. ConfiguraÃ§Ã£o, execuÃ§Ã£o e README
   - [x] 13.1 Consolidar a configuraÃ§Ã£o externa e o build WAR
     - Consolidar a configuraÃ§Ã£o externa de PostgreSQL/Redis/RabbitMQ no pacote `config` (sem credenciais no cÃ³digo); garantir que o build Maven produza o WAR implantÃ¡vel no Payara.
     - _Requisitos: 13.1, 13.2_
-  - [ ] 13.2 Escrever o README
+  - [x] 13.2 Escrever o README
     - Criar o README com instruÃ§Ãµes de build/execuÃ§Ã£o no Payara, configuraÃ§Ã£o das dependÃªncias (PostgreSQL, Redis, RabbitMQ) e exemplos cURL dos cinco endpoints.
     - _Requisitos: 13.4_
 
