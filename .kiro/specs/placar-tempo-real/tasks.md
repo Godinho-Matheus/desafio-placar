@@ -1,4 +1,4 @@
-# Implementation Plan
+﻿# Implementation Plan
 
 ## Overview
 
@@ -144,7 +144,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
   - Executar o build Maven; executar os testes existentes, se houver; verificar se os componentes implementados estÃ£o integrados; corrigir apenas problemas de integraÃ§Ã£o encontrados.
 
 - [ ] 13. ConfiguraÃ§Ã£o, execuÃ§Ã£o e README
-  - [ ] 13.1 Consolidar a configuraÃ§Ã£o externa e o build WAR
+  - [x] 13.1 Consolidar a configuraÃ§Ã£o externa e o build WAR
     - Consolidar a configuraÃ§Ã£o externa de PostgreSQL/Redis/RabbitMQ no pacote `config` (sem credenciais no cÃ³digo); garantir que o build Maven produza o WAR implantÃ¡vel no Payara.
     - _Requisitos: 13.1, 13.2_
   - [ ] 13.2 Escrever o README

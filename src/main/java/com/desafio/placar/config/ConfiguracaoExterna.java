@@ -5,20 +5,25 @@ import java.util.Optional;
 /**
  * Ponto central para leitura de configuracao externa do Sistema.
  *
- * <p>Esqueleto minimo que centraliza, para as tarefas futuras, a leitura de
- * propriedades e variaveis de ambiente (por exemplo, dados de conexao com
- * PostgreSQL, Redis e RabbitMQ). Nenhuma credencial, host, porta ou valor
- * sensivel e fixado no codigo: os valores sao sempre resolvidos em tempo de
- * execucao a partir do ambiente.</p>
+ * <p>Centraliza a leitura de propriedades e variaveis de ambiente usadas pelas
+ * conexoes com Redis e RabbitMQ. A conexao com o PostgreSQL nao passa por esta
+ * classe: ela e gerenciada pelo Payara (DataSource) e referenciada apenas por
+ * JNDI na unidade de persistencia. As configuracoes externas podem ser fornecidas
+ * por propriedades da JVM ou variaveis de ambiente. Quando previsto pelas classes
+ * especificas, podem ser usados defaults adequados ao desenvolvimento local.
+ * Credenciais reais de producao devem ser fornecidas externamente.</p>
  *
  * <p>A resolucao usa recursos nativos da plataforma (variaveis de ambiente e
  * propriedades de sistema da JVM), mantendo a solucao simples e compativel com
  * Jakarta EE/Payara, sem dependencias adicionais. A ordem de precedencia e:
- * propriedade de sistema ({@link System#getProperty(String)}) e, na ausencia
- * dela, variavel de ambiente ({@link System#getenv(String)}).</p>
+ * propriedade de sistema ({@link System#getProperty(String)}) &rarr;, na ausencia
+ * dela, variavel de ambiente ({@link System#getenv(String)}) &rarr; valor padrao
+ * (quando informado).</p>
  *
- * <p>As chaves concretas de configuracao (PostgreSQL, Redis, RabbitMQ) serao
- * definidas nas tarefas correspondentes da Spec.</p>
+ * <p>As chaves concretas de configuracao ficam documentadas em
+ * {@link ConfiguracaoRedis} (Redis) e {@link ConfiguracaoRabbitMq} (RabbitMQ). O
+ * nome JNDI usado pelo PostgreSQL fica documentado em
+ * {@link ConfiguracaoBancoDados}.</p>
  */
 public final class ConfiguracaoExterna {
 

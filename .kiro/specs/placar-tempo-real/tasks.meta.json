@@ -74,6 +74,18 @@
         "chatSessionId": "sess_e381fa74-8d72-4904-9016-21a52dad6b7e",
         "timestamp": 1790296519758
       }
+    ],
+    "13.1 Consolidar a configuraÃ§Ã£o externa e o build WAR": [
+      {
+        "executionId": "219e9187-519b-4be2-b81c-b26a1116a0bb",
+        "chatSessionId": "sess_ecfc332f-8f3d-4124-a88a-3f9f8c641655",
+        "timestamp": 1790524022050
+      },
+      {
+        "executionId": "219e9187-519b-4be2-b81c-b26a1116a0bb",
+        "chatSessionId": "sess_ecfc332f-8f3d-4124-a88a-3f9f8c641655",
+        "timestamp": 1790524255865
+      }
     ]
   }
 }
