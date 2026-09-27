@@ -112,7 +112,33 @@ public class JogosPage extends WebPage {
     /** Status selecionado no filtro; {@code null} representa "Todos". */
     private Status statusSelecionado;
 
+    /**
+     * Construtor publico sem argumentos usado pelo Wicket em producao.
+     *
+     * <p>O Wicket cria a pagina por este construtor e, em seguida, a integracao
+     * Wicket-CDI injeta o campo {@link #jogoService} (anotado com {@code @Inject})
+     * <em>apos</em> a construcao. Portanto {@code jogoService} pode ser {@code null}
+     * durante a construcao: o corpo do construtor nao o dereferencia; o
+     * {@link LoadableDetachableModel} e o callback do timer so o utilizam depois,
+     * em tempo de renderizacao/Ajax, quando o CDI ja injetou a dependencia.</p>
+     */
     public JogosPage() {
+        this(null);
+    }
+
+    /**
+     * Construtor de teste (package-private, sem {@code @Inject}) que recebe o
+     * {@link JogoService} diretamente, permitindo testes de UI com WicketTester
+     * sem um container CDI. Nao altera o comportamento da pagina: em producao o
+     * Wicket usa o construtor publico sem argumentos e o CDI injeta o campo
+     * {@link #jogoService} apos a construcao.
+     *
+     * @param jogoService o servico a ser usado pela pagina (em testes); em
+     *                    producao chega {@code null} aqui e o campo e preenchido
+     *                    depois pela injecao de CDI
+     */
+    JogosPage(JogoService jogoService) {
+        this.jogoService = jogoService;
 
         // Painel de mensagens (erros de dominio e mensagens genericas).
         // Tambem sera reutilizado pelas subtasks 9.3 e 9.4.

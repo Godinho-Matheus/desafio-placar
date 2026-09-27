@@ -9,3 +9,6 @@ D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\CapturingEve
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\FakeJogoRepository.java
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\FakePlacarCache.java
 D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\service\JogoServiceTest.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\web\JogosPageTest.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\web\PlacarPanelTest.java
+D:\PROJETOS\Desafio-Placar\src\test\java\com\desafio\placar\web\ServicoControlavel.java

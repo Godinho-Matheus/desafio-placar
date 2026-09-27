@@ -133,6 +133,19 @@
         </dependency>
 
         <!--
+            Apache Wicket Tester (wicket-tester): utilitario oficial do Wicket para testes
+            unitarios de paginas/componentes (WicketTester), sem servidor/servlet real.
+            Escopo "test" apenas — NAO e empacotado no WAR (fica fora do WEB-INF/lib).
+            Alinhado a MESMA versao do Wicket (${wicket.version}).
+        -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-tester</artifactId>
+            <version>${wicket.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
             Eclipse Parsson: implementacao de referencia do Jakarta JSON Processing (JSON-P 2.1).
             Adicionada APENAS com escopo "test" para fornecer o PROVIDER de JSON-P em runtime
             durante os testes unitarios (a jakarta.jakartaee-api e "provided", logo traz somente

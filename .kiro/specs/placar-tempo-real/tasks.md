@@ -126,7 +126,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
     - O status faz parte do estado completo do Jogo no PostgreSQL e Ã© atualizado normalmente pelas operaÃ§Ãµes da interface (criaÃ§Ã£o, atualizaÃ§Ã£o de placar, encerramento), nÃ£o pelo polling.
     - _Requisitos: 8.1_
 
-- [ ] 11. Testes (diferenciais/opcionais â€” JUnit)
+- [x] 11. Testes (diferenciais/opcionais â€” JUnit)
   - [x]* 11.1 Testes unitÃ¡rios das regras de negÃ³cio do `JogoService`
     - CriaÃ§Ã£o inicia 0x0/EM_ANDAMENTO; atualizaÃ§Ã£o persiste o novo placar; atualizaÃ§Ã£o dispara `PlacarAtualizadoEvent` com jogoId/placarA/placarB corretos (observando o evento CDI, sem publicar no RabbitMQ); jogo ENCERRADO rejeita alteraÃ§Ã£o; encerramento preserva placar; encerramento idempotente; filtro por status retorna os jogos corretos.
     - _Requisitos: 12.1_
@@ -136,7 +136,7 @@ Este plano converte o design aprovado em tarefas de codificaÃ§Ã£o incrementa
   - [x]* 11.3 Testes da API REST
     - Exercitar contratos e cÃ³digos (201/200/400/404/409), o corpo `{"status":"ENCERRADO"}` do `PUT /status` e a idempotÃªncia do encerramento.
     - _Requisitos: 12.2_
-  - [ ]* 11.4 Testes de UI com WicketTester
+  - [x]* 11.4 Testes de UI com WicketTester
     - Controle de atualizaÃ§Ã£o desabilitado em jogo ENCERRADO; um ciclo do `AjaxSelfUpdatingTimerBehavior` rerenderiza o placar com o novo valor.
     - _Requisitos: 6.2, 8, 9_
 
