@@ -138,7 +138,12 @@ public class JogosPage extends WebPage {
      *                    depois pela injecao de CDI
      */
     JogosPage(JogoService jogoService) {
-        this.jogoService = jogoService;
+        // Em producao chega null aqui (via JogosPage()); nesse caso NAO sobrescreve
+        // o campo, deixando a injecao Wicket-CDI preencher jogoService apos a
+        // construcao. Em testes chega um servico concreto e ele e atribuido.
+        if (jogoService != null) {
+            this.jogoService = jogoService;
+        }
 
         // Painel de mensagens (erros de dominio e mensagens genericas).
         // Tambem sera reutilizado pelas subtasks 9.3 e 9.4.
