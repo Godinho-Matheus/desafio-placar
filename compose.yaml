@@ -1,0 +1,122 @@
+# Docker Compose do desafio-placar.
+#
+# Sobe o sistema completo de forma reproduzivel com:
+#   docker compose up --build
+#
+# Servicos:
+#   app       -> Payara 7.2026.2 com o WAR implantado e jdbc/placar configurado
+#   postgres  -> PostgreSQL (fonte de verdade)
+#   redis     -> cache do placar atual
+#   rabbitmq  -> propagacao assincrona (com Management UI)
+#
+# A aplicacao acessa o PostgreSQL apenas via DataSource JNDI jdbc/placar
+# (configurado no Payara). Redis e RabbitMQ sao apontados para os nomes de
+# servico internos da rede Compose por variaveis de ambiente.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-placar}
+      POSTGRES_USER: ${POSTGRES_USER:-placar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-placar_dev}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-placar} -d ${POSTGRES_DB:-placar}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - placar
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - placar
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-placar}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-placar_dev}
+    ports:
+      # Apenas a Management UI e publicada no host; o AMQP (5672) fica interno.
+      # So a porta do host e configuravel (fallback ao default); a interna e fixa.
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    networks:
+      - placar
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      # PostgreSQL: consumido pelo init.d que gera o Connection Pool do Payara
+      # (NUNCA pela aplicacao). Aponta para o servico "postgres" da rede.
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-placar}
+      POSTGRES_USER: ${POSTGRES_USER:-placar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-placar_dev}
+
+      # Redis: lido pela aplicacao (System.getenv). Aponta para o servico "redis".
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # RabbitMQ: lido pela aplicacao (System.getenv). Aponta para "rabbitmq".
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_DEFAULT_USER:-placar}
+      RABBITMQ_PASSWORD: ${RABBITMQ_DEFAULT_PASS:-placar_dev}
+      RABBITMQ_VIRTUAL_HOST: /
+    ports:
+      # So a porta publicada no host e configuravel (fallback ao default); a
+      # porta interna do container permanece fixa em 8080.
+      - "${APP_PORT:-8080}:8080"
+      # Admin Console (opcional, apenas para inspecao; nao e necessario para
+      # configurar ou executar o sistema).
+      - "${PAYARA_ADMIN_PORT:-4848}:4848"
+    healthcheck:
+      # So fica "healthy" quando a aplicacao realmente responde (evita o 404
+      # temporario enquanto o WAR ainda esta implantando). A imagem do Payara
+      # nao traz curl/wget/nc; usa-se o bash (presente em /usr/bin/bash) com o
+      # pseudo-dispositivo /dev/tcp para fazer um GET cru e exigir HTTP 200.
+      test:
+        - "CMD"
+        - "bash"
+        - "-c"
+        - "exec 3<>/dev/tcp/127.0.0.1/8080; printf 'GET /desafio-placar/api/jogos HTTP/1.0\\r\\nHost: localhost\\r\\n\\r\\n' >&3; head -n 1 <&3 | grep -q ' 200 '"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks:
+      - placar
+
+volumes:
+  postgres_data:
+
+networks:
+  placar:
+    driver: bridge

@@ -1,0 +1,16 @@
+# Build Maven
+target/
+
+# Ambiente local (nunca versionar credenciais reais)
+.env
+
+# Logs
+*.log
+
+# Metadados de IDE / editor
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project

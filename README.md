@@ -53,7 +53,82 @@ commit não desfazem a alteração já persistida.
 - Swagger UI 5.32.14 (WebJar, empacotado no WAR)
 - Maven (build; empacotamento `war`)
 
-## Pré-requisitos
+## Execução rápida com Docker
+
+Forma recomendada para avaliar o entregável. Sobe o sistema completo (Payara,
+PostgreSQL, Redis e RabbitMQ) de forma reproduzível, sem exigir Java, Maven ou
+Payara instalados na máquina — apenas Docker com Compose.
+
+```bash
+git clone <url-do-repositorio>
+cd desafio-placar
+docker compose up --build
+```
+
+O primeiro `up` compila o projeto (os testes fazem parte do build), gera o WAR,
+sobe os quatro serviços e, automaticamente:
+
+- disponibiliza o driver JDBC do PostgreSQL 42.7.4 no domínio do Payara;
+- cria o Connection Pool `PlacarPool` e o recurso JNDI `jdbc/placar`;
+- implanta o WAR no Payara;
+- aponta Redis e RabbitMQ para os serviços internos da rede Compose;
+- cria o banco `placar` (o schema da tabela `jogo` é gerado por JPA/EclipseLink).
+
+Não é necessária nenhuma configuração manual pelo Admin Console.
+
+O Payara só inicia depois que PostgreSQL, Redis e RabbitMQ passam nos respectivos
+_healthchecks_ (`depends_on: condition: service_healthy`), tolerando o tempo
+normal de inicialização dos containers sem exigir reinício manual.
+
+### URLs (Docker)
+
+- Interface web (Wicket): `http://localhost:8080/desafio-placar/`
+- Swagger UI: `http://localhost:8080/desafio-placar/swagger/`
+- Documento OpenAPI: `http://localhost:8080/openapi`
+- RabbitMQ Management: `http://localhost:15672` (usuário/senha padrão de
+  desenvolvimento: `placar` / `placar_dev`)
+- Admin Console do Payara (opcional, apenas inspeção): `http://localhost:4848`
+
+### Parar e limpar
+
+```bash
+# Para os containers preservando os dados do PostgreSQL (volume nomeado):
+docker compose down
+
+# Sobe novamente mantendo os jogos já cadastrados:
+docker compose up
+
+# Ambiente totalmente limpo (remove o volume do PostgreSQL) e rebuild:
+docker compose down -v
+docker compose up --build
+```
+
+### Variáveis de ambiente (Docker)
+
+As credenciais de desenvolvimento têm defaults no `compose.yaml`. Para
+personalizar, copie o exemplo e ajuste:
+
+```bash
+cp .env.example .env
+```
+
+O arquivo `.env` real é ignorado pelo Git (veja `.gitignore`) e não deve conter
+credenciais reais. O PostgreSQL não é configurado pela aplicação: seus valores
+alimentam o container do banco e a geração do Connection Pool `jdbc/placar` no
+Payara. Redis e RabbitMQ são apontados para os serviços internos `redis` e
+`rabbitmq` por variáveis de ambiente lidas pela aplicação.
+
+Em caso de conflito de porta no host (por exemplo, a `8080` já em uso), ajuste
+as portas publicadas no `.env` — apenas o lado publicado muda, as portas
+internas dos containers permanecem as mesmas:
+
+```bash
+APP_PORT=8080               # aplicação (Wicket / API / Swagger)
+PAYARA_ADMIN_PORT=4848      # Admin Console (opcional)
+RABBITMQ_MANAGEMENT_PORT=15672  # RabbitMQ Management UI
+```
+
+## Pré-requisitos (execução manual)
 
 - Java 21
 - Maven
@@ -181,7 +256,11 @@ mvn clean package
 
 O artefato é gerado em `target/desafio-placar.war`.
 
-## Deploy no Payara
+## Deploy no Payara (execução manual)
+
+Alternativa ao Docker, mantida como documentação técnica. As instruções de
+Payara, JDBC Resource, Connection Pool, Redis e RabbitMQ das seções acima em
+"Configuração" se aplicam a este modo.
 
 1. Inicie o domínio do Payara.
 2. Garanta que PostgreSQL, Redis e RabbitMQ estejam em execução.

@@ -1,0 +1,7 @@
+# Garante fim de linha LF para arquivos que precisam dele independentemente do
+# sistema operacional. Sem isso, o Git no Windows pode converter para CRLF e
+# quebrar scripts executados dentro de containers Linux (ex.: o init.d do Payara).
+*.sh        text eol=lf
+Dockerfile  text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf

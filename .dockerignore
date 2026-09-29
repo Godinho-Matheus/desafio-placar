@@ -1,0 +1,28 @@
+# Mantem o contexto de build enxuto. O build Maven acontece dentro da imagem,
+# entao artefatos locais e metadados nao precisam ir para o daemon do Docker.
+
+# Build local
+target/
+
+# Metadados de IDE / editor
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Controle de versao e ferramentas
+.git/
+.gitignore
+
+# Configuracao do Kiro (nao necessaria no build)
+.kiro/
+
+# Ambiente local e logs
+.env
+*.log
+mvn-test-out.txt
+
+# Docs (nao necessarios para o build da imagem)
+README.md
