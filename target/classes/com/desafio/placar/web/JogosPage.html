@@ -2,75 +2,97 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Jogos</title>
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; margin: 24px; color: #222; }
-        h1 { margin-bottom: 16px; }
-        .feedback { margin: 12px 0; }
-        .feedback ul { list-style: none; padding: 0; margin: 0; }
-        .feedback li { color: #b00020; margin: 4px 0; }
-        .filtro { margin: 16px 0; }
-        .filtro label { margin-right: 8px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
-        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; }
-        th { background: #f2f2f2; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Placar</title>
+    <!-- CSS servido como recurso de pacote do Wicket (mesmo pacote da pagina),
+         resolvido automaticamente por <wicket:link>. Sem dependencias externas. -->
+    <wicket:link>
+        <link rel="stylesheet" type="text/css" href="placar.css"/>
+    </wicket:link>
 </head>
 <body>
-    <h1>Jogos</h1>
+    <div class="pagina">
 
-    <!-- Componente auxiliar neutro que hospeda o AjaxSelfUpdatingTimerBehavior
-         (polling). Fica FORA da tabela e FORA de todos os formularios: a cada
-         ciclo o timer re-renderiza apenas este elemento, e o codigo adiciona ao
-         alvo Ajax somente os rotulos de placar que mudaram. Nao exibe conteudo. -->
-    <span wicket:id="pollingTrigger"></span>
+        <!-- Cabecalho com titulo e descricao curta. -->
+        <header class="cabecalho">
+            <h1>Placar</h1>
+            <p class="subtitulo">Gerenciamento de placares de partidas de futebol em tempo real.</p>
+        </header>
 
-    <!-- Mensagens ao usuario (erros de dominio e mensagens genericas). -->
-    <div wicket:id="feedback" class="feedback"></div>
+        <!-- Componente auxiliar neutro que hospeda o AjaxSelfUpdatingTimerBehavior
+             (polling). Fica FORA da tabela e FORA de todos os formularios: a cada
+             ciclo o timer re-renderiza apenas este elemento, e o codigo adiciona ao
+             alvo Ajax somente os rotulos de placar que mudaram. Nao exibe conteudo. -->
+        <span wicket:id="pollingTrigger"></span>
 
-    <!-- Painel de criacao de Jogo (submit sincrono simples, sem Ajax). -->
-    <div wicket:id="criarJogoPanel"></div>
+        <!-- Mensagens ao usuario (erros de dominio e mensagens genericas). -->
+        <div wicket:id="feedback" class="feedback"></div>
 
-    <!-- Filtro por status: submit sincrono simples (sem Ajax). -->
-    <form wicket:id="filtroForm" class="filtro">
-        <label for="filtroStatus">Status:</label>
-        <select wicket:id="filtroStatus" id="filtroStatus"></select>
-        <button type="submit">Filtrar</button>
-    </form>
+        <!-- Painel de criacao de Jogo (submit sincrono simples, sem Ajax). -->
+        <section class="card">
+            <h2 class="card__titulo">Novo jogo</h2>
+            <p class="card__descricao">Cadastre uma nova partida informando os times e a data/hora.</p>
+            <div wicket:id="criarJogoPanel"></div>
+        </section>
 
-    <!-- Listagem dos jogos (dados completos vindos do PostgreSQL via JogoService). -->
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Time A</th>
-                <th>Time B</th>
-                <th>Placar A</th>
-                <th>Placar B</th>
-                <th>Status</th>
-                <th>Data/Hora</th>
-                <th>Acoes</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr wicket:id="jogos">
-                <td wicket:id="id">1</td>
-                <td wicket:id="timeA">Time A</td>
-                <td wicket:id="timeB">Time B</td>
-                <!-- Rotulos de EXIBICAO (somente leitura) dos placares. Sao atualizados
-                     automaticamente pelo polling (AjaxSelfUpdatingTimerBehavior hospedado
-                     no componente auxiliar pollingTrigger) via jogoService.obterPlacarAtual(jogoId),
-                     sem recarregamento manual. Apenas estes rotulos entram no alvo Ajax;
-                     a linha e o PlacarPanel nunca sao re-renderizados pelo polling.
-                     Os campos editaveis de placar ficam no PlacarPanel (coluna Acoes)
-                     e NAO sao tocados pelo polling. -->
-                <td wicket:id="placarA">0</td>
-                <td wicket:id="placarB">0</td>
-                <td wicket:id="status">EM_ANDAMENTO</td>
-                <td wicket:id="dataHoraPartida">01/01/2025 00:00</td>
-                <td wicket:id="placarPanel"></td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- Filtro por status: submit sincrono simples (sem Ajax). -->
+        <form wicket:id="filtroForm" class="filtro card">
+            <label for="filtroStatus">Status:</label>
+            <select wicket:id="filtroStatus" id="filtroStatus"></select>
+            <button type="submit" class="botao-secundario">Filtrar</button>
+        </form>
+
+        <!-- Listagem dos jogos (dados completos vindos do PostgreSQL via JogoService). -->
+        <section class="card tabela-card">
+            <div class="tabela-wrapper">
+                <table class="jogos">
+                    <thead>
+                        <tr>
+                            <th class="col-id">ID</th>
+                            <th class="col-partida">Partida</th>
+                            <th>Status</th>
+                            <th>Data/Hora</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr wicket:id="jogos">
+                            <td class="coluna-id"><span wicket:id="id">1</span></td>
+                            <!-- Coluna PARTIDA: agrupa visualmente time A, placar e time B
+                                 numa unica celula (estilo placar esportivo). Cada componente
+                                 Wicket preserva seu wicket:id e permanece descendente da linha
+                                 (jogos), mantendo a hierarquia funcional e o polling.
+                                 Rotulos de EXIBICAO (somente leitura) dos placares (placarA/placarB):
+                                 sao atualizados automaticamente pelo polling (AjaxSelfUpdatingTimerBehavior
+                                 hospedado no pollingTrigger) via jogoService.obterPlacarAtual(jogoId),
+                                 sem recarregamento manual. Apenas estes rotulos entram no alvo Ajax;
+                                 a linha e o PlacarPanel nunca sao re-renderizados pelo polling.
+                                 Os campos editaveis de placar ficam no PlacarPanel (coluna Acoes)
+                                 e NAO sao tocados pelo polling. -->
+                            <td class="coluna-partida">
+                                <div class="partida">
+                                    <span wicket:id="timeA" class="partida__time partida__time--a">Time A</span>
+                                    <span class="partida__placar">
+                                        <span wicket:id="placarA" class="partida__gols">0</span>
+                                        <span class="partida__x">x</span>
+                                        <span wicket:id="placarB" class="partida__gols">0</span>
+                                    </span>
+                                    <span wicket:id="timeB" class="partida__time partida__time--b">Time B</span>
+                                </div>
+                            </td>
+                            <!-- Wrapper visual .coluna-status; o rotulo de status (wicket:id="status",
+                                 preservado) recebe o estilo de badge. -->
+                            <td class="coluna-status">
+                                <span wicket:id="status" class="status-badge">EM_ANDAMENTO</span>
+                            </td>
+                            <td class="coluna-data"><span wicket:id="dataHoraPartida">01/01/2025 00:00</span></td>
+                            <td wicket:id="placarPanel" class="coluna-acoes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
 </body>
 </html>

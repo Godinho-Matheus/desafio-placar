@@ -1,0 +1,506 @@
+/*
+ * Estilos da Interface_Web (Apache Wicket) do desafio-placar.
+ *
+ * Melhoria puramente visual: dashboard esportivo simples e moderno. Nao ha
+ * dependencias externas (sem Bootstrap/Tailwind/JS/icones). O arquivo e servido
+ * como recurso de pacote do Wicket via <wicket:link> em JogosPage.html, sem
+ * alterar nenhuma classe Java, wicket:id, regra de negocio ou polling.
+ *
+ * Observacao: o Wicket remove os atributos wicket:id do HTML renderizado em
+ * modo DEPLOYMENT; por isso os estilos usam apenas CLASSES e SELETORES
+ * ESTRUTURAIS (nunca [wicket:id=...]).
+ */
+
+:root {
+    --cor-fundo: #f4f6f8;
+    --cor-superficie: #ffffff;
+    --cor-borda: #e2e8f0;
+    --cor-borda-forte: #cbd5e1;
+    --cor-texto: #1f2933;
+    --cor-texto-suave: #64748b;
+    --cor-primaria: #1d4ed8;
+    --cor-primaria-escura: #1e40af;
+    --cor-primaria-suave: #eff4ff;
+    --cor-neutro: #475569;
+    --cor-neutro-suave: #e2e8f0;
+    --cor-perigo: #b91c1c;
+    --raio: 12px;
+    --raio-pequeno: 8px;
+    --sombra: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 32px 16px 64px;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
+    line-height: 1.5;
+}
+
+/* Container centralizado com largura maxima. */
+.pagina {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Cabecalho. */
+.cabecalho {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cabecalho h1 {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.cabecalho .subtitulo {
+    margin: 0;
+    color: var(--cor-texto-suave);
+    font-size: 0.95rem;
+}
+
+/* Card generico. */
+.card {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 24px;
+}
+
+.card__titulo {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+    font-weight: 650;
+}
+
+.card__descricao {
+    margin: 0 0 20px;
+    color: var(--cor-texto-suave);
+    font-size: 0.88rem;
+}
+
+/* Mensagens de feedback. */
+.feedback {
+    margin: 0;
+}
+
+.feedback ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.feedback li {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: var(--cor-perigo);
+    padding: 10px 14px;
+    border-radius: var(--raio-pequeno);
+    font-size: 0.9rem;
+}
+
+/* Formulario de criacao de jogo. */
+.criar-jogo fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.criar-jogo legend {
+    padding: 0;
+    /* O titulo do card ja apresenta a secao; a legend fica acessivel mas oculta. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Campos alinhados em grid. */
+.criar-jogo .campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cor-neutro);
+}
+
+.campo .dica {
+    font-size: 0.75rem;
+    color: var(--cor-texto-suave);
+}
+
+/* Entradas de texto/numero/data-hora e selects. Mesma aparencia para todos os
+   controles (altura, borda, raio, padding, tipografia e foco). */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+select {
+    font: inherit;
+    color: var(--cor-texto);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda-forte);
+    border-radius: var(--raio-pequeno);
+    padding: 9px 12px;
+    width: 100%;
+    /* Altura uniforme entre datetime-local e select (que calculam altura de forma
+       diferente entre navegadores). box-sizing: border-box (global) e considerado. */
+    height: 40px;
+    line-height: 1.2;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="datetime-local"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px var(--cor-primaria-suave);
+}
+
+/* datetime-local: mantem o icone nativo de calendario utilizavel e evita
+   sobreposicao de texto/icone, sem esconder o controle nativo. */
+input[type="datetime-local"] {
+    /* Aparencia nativa preservada; apenas garante espaco para o icone. */
+    min-height: 40px;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+input::placeholder {
+    color: #a0aec0;
+}
+
+/* Botoes (base). */
+button {
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: var(--raio-pequeno);
+    padding: 9px 18px;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--cor-primaria-suave);
+}
+
+/* Botao principal (Criar jogo). */
+.botao-primario {
+    background: var(--cor-primaria);
+    color: #fff;
+    font-size: 0.95rem;
+    padding: 10px 22px;
+}
+
+.botao-primario:hover {
+    background: var(--cor-primaria-escura);
+}
+
+/* Area de filtro compacta. */
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+}
+
+.filtro label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cor-neutro);
+    margin: 0;
+}
+
+.filtro select {
+    width: auto;
+    min-width: 160px;
+}
+
+.botao-secundario {
+    background: var(--cor-neutro-suave);
+    color: var(--cor-neutro);
+    border-color: var(--cor-borda-forte);
+    font-size: 0.9rem;
+}
+
+.botao-secundario:hover {
+    background: #d3dce6;
+}
+
+/* Card da tabela: permite rolagem horizontal em telas pequenas. */
+.tabela-card {
+    padding: 8px;
+}
+
+.tabela-wrapper {
+    overflow-x: auto;
+}
+
+table.jogos {
+    border-collapse: collapse;
+    width: 100%;
+    /* Com a coluna unica PARTIDA a tabela ficou mais compacta; largura minima
+       menor reduz a rolagem horizontal desnecessaria. */
+    min-width: 640px;
+}
+
+table.jogos thead th {
+    background: #f8fafc;
+    color: var(--cor-texto-suave);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--cor-borda);
+    white-space: nowrap;
+}
+
+table.jogos tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--cor-borda);
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+table.jogos tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table.jogos tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* ID discreto. */
+.coluna-id {
+    color: var(--cor-texto-suave);
+    font-variant-numeric: tabular-nums;
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* Data/hora sem quebra. */
+.coluna-data {
+    white-space: nowrap;
+    color: var(--cor-texto-suave);
+}
+
+/*
+ * Coluna PARTIDA: layout inspirado em placares esportivos.
+ * Grid de 3 areas (timeA | placar | timeB): time A colado no placar A e time B
+ * no placar B, com o "x" central discreto. Placares com maior peso visual que os
+ * nomes. Conjunto centralizado e responsivo (Grid), sem provocar rolagem extra.
+ */
+.coluna-partida {
+    min-width: 260px;
+}
+
+.partida {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.partida__time {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--cor-texto);
+    /* Nomes legiveis sem exagero; truncam com reticencias se muito longos. */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.partida__time--a {
+    text-align: right;
+}
+
+.partida__time--b {
+    text-align: left;
+}
+
+/* Bloco central do placar: numeros grandes + "x" discreto. */
+.partida__placar {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.partida__gols {
+    font-weight: 800;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: var(--cor-primaria-escura);
+    font-variant-numeric: tabular-nums;
+    min-width: 1.2ch;
+    text-align: center;
+}
+
+.partida__x {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cor-texto-suave);
+    text-transform: lowercase;
+}
+
+/* Badge de status: envolve o rotulo (Label) de status via wrapper .coluna-status.
+   O texto do rotulo (EM_ANDAMENTO/ENCERRADO) e definido pelo Wicket; aplicamos
+   um badge consistente e legivel ao conteudo da celula. */
+.coluna-status {
+    white-space: nowrap;
+}
+
+.coluna-status .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: var(--cor-neutro-suave);
+    color: var(--cor-neutro);
+}
+
+/* Acoes por linha. */
+.coluna-acoes {
+    white-space: nowrap;
+}
+
+.placar-acoes {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.placar-acoes + .placar-acoes {
+    margin-top: 8px;
+}
+
+.placar-acoes input[type="number"] {
+    width: 64px;
+    text-align: center;
+    padding: 7px 8px;
+}
+
+.placar-acoes span {
+    color: var(--cor-texto-suave);
+    font-weight: 700;
+}
+
+/* Botao "Atualizar placar": acao primaria discreta. */
+.placar-acoes.acao-atualizar button {
+    background: var(--cor-primaria-suave);
+    color: var(--cor-primaria-escura);
+    border-color: #c7d7fe;
+    font-size: 0.85rem;
+    padding: 7px 14px;
+}
+
+.placar-acoes.acao-atualizar button:hover:not(:disabled) {
+    background: #dde7ff;
+}
+
+/* Botao "Encerrar": acao neutra/secundaria. */
+.placar-acoes.acao-encerrar button {
+    background: var(--cor-superficie);
+    color: var(--cor-neutro);
+    border-color: var(--cor-borda-forte);
+    font-size: 0.85rem;
+    padding: 7px 14px;
+}
+
+.placar-acoes.acao-encerrar button:hover:not(:disabled) {
+    background: #f1f5f9;
+}
+
+/* Estado desabilitado consistente (ex.: jogo ENCERRADO). */
+button:disabled,
+input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Responsividade basica. */
+@media (max-width: 640px) {
+    body {
+        padding: 20px 12px 48px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .cabecalho h1 {
+        font-size: 1.5rem;
+    }
+
+    .filtro {
+        align-items: stretch;
+    }
+
+    .filtro select {
+        width: 100%;
+    }
+
+    /* Placar levemente menor em telas estreitas, mantendo o equilibrio visual. */
+    .partida {
+        gap: 8px;
+    }
+
+    .partida__gols {
+        font-size: 1.2rem;
+    }
+
+    .partida__time {
+        font-size: 0.9rem;
+    }
+}
