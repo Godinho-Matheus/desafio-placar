@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.OffsetDateTime;
 
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,5 +72,39 @@ class PlacarPanelTest {
                 tester.getComponentFromLastRenderedPage(
                         "placarPanel:encerrarForm:encerrarBotao").isEnabled(),
                 "Botao de encerrar deve estar desabilitado para jogo ENCERRADO");
+    }
+
+    @Test
+    void placarPanel_naoDeveReplicarValidacaoDePlacarNegativo() {
+        // Jogo EM_ANDAMENTO: o controle de atualizacao fica habilitado e editavel.
+        Jogo jogo = new Jogo();
+        jogo.setId(1L);
+        jogo.setTimeA("Palmeiras");
+        jogo.setTimeB("Corinthians");
+        jogo.setPlacarA(0);
+        jogo.setPlacarB(0);
+        jogo.setStatus(Status.EM_ANDAMENTO);
+        jogo.setDataHoraPartida(OffsetDateTime.parse("2026-01-01T20:00:00Z"));
+
+        tester.startComponentInPage(new PlacarPanel("placarPanel", jogo));
+
+        // Submete placarA negativo. A regra de placar >= 0 e autoritativa no
+        // JogoService (Requisito 4.4): a interface NAO a replica. Portanto o valor
+        // deve ser convertido/aceito pelo campo (sem erro de validacao de range na
+        // UI) e seguir para o onSubmit, que chama o servico. Neste teste isolado o
+        // jogoService e nulo; o proprio PlacarPanel captura a RuntimeException
+        // resultante no seu catch e nao propaga, de modo que o submit nao quebra.
+        FormTester form = tester.newFormTester("placarPanel:atualizarPlacarForm");
+        form.setValue("placarA", "-1");
+        form.setValue("placarB", "0");
+        form.submit("atualizarBotao");
+
+        // O campo NAO deve carregar erro de validacao da interface: a ausencia de
+        // RangeValidator permite que o valor negativo flua ate o servico (que, em
+        // producao, lanca EntradaInvalidaException exibida via error(e.getMessage())).
+        FormComponent<?> placarA = (FormComponent<?>) tester.getComponentFromLastRenderedPage(
+                "placarPanel:atualizarPlacarForm:placarA");
+        assertFalse(placarA.hasErrorMessage(),
+                "A interface nao deve replicar a validacao de placar negativo");
     }
 }

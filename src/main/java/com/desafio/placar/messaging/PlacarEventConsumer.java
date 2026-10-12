@@ -47,8 +47,11 @@ import jakarta.json.JsonReader;
  * contrario do publisher, o canal permanece aberto). A topologia e declarada de
  * forma idempotente reutilizando as mesmas constantes do
  * {@link PlacarEventPublisher} (exchange, fila e binding), evitando literais
- * duplicados. Em seguida inicia o consumo com {@code basicConsume(...)}. O
- * {@link PreDestroy} fecha canal e conexao, liberando os recursos.</p>
+ * duplicados. Em seguida registra {@value #NUMERO_CONSUMIDORES} consumidores na
+ * mesma fila com {@code basicConsume(...)}; como compartilham a mesma fila, o
+ * RabbitMQ distribui as mensagens entre eles em round-robin, sem abrir conexao
+ * nem canal adicionais. O {@link PreDestroy} fecha canal e conexao, liberando os
+ * recursos.</p>
  *
  * <p><strong>Fluxo da mensageria:</strong> {@link PlacarAtualizadoEvent} &rarr;
  * AFTER_SUCCESS (observer) &rarr; {@link PlacarEventPublisher} &rarr; RabbitMQ
@@ -78,6 +81,12 @@ import jakarta.json.JsonReader;
 public class PlacarEventConsumer {
 
     private static final Logger LOG = Logger.getLogger(PlacarEventConsumer.class.getName());
+
+    /**
+     * Quantidade de consumidores registrados na mesma fila (e no mesmo canal/conexao).
+     * O RabbitMQ distribui as mensagens entre eles em round-robin.
+     */
+    private static final int NUMERO_CONSUMIDORES = 2;
 
     private final PlacarCache placarCache;
 
@@ -131,8 +140,10 @@ public class PlacarEventConsumer {
 
             boolean autoAck = true;
             DeliverCallback deliverCallback = (consumerTag, delivery) -> processar(delivery.getBody());
-            channel.basicConsume(PlacarEventPublisher.QUEUE, autoAck, deliverCallback,
-                    consumerTag -> LOG.log(Level.INFO, "Consumidor de placar cancelado: {0}", consumerTag));
+            for (int i = 0; i < NUMERO_CONSUMIDORES; i++) {
+                channel.basicConsume(PlacarEventPublisher.QUEUE, autoAck, deliverCallback,
+                        consumerTag -> LOG.log(Level.INFO, "Consumidor de placar cancelado: {0}", consumerTag));
+            }
         } catch (IOException | TimeoutException e) {
             LOG.log(Level.WARNING,
                     "RabbitMQ indisponivel na inicializacao; o consumidor de placar nao foi iniciado",

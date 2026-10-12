@@ -6,6 +6,7 @@ import java.util.List;
 import com.desafio.placar.cache.PlacarAtual;
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.Status;
+import com.desafio.placar.domain.excecao.EntradaInvalidaException;
 import com.desafio.placar.service.JogoService;
 
 /**
@@ -52,5 +53,26 @@ final class ServicoControlavel extends JogoService {
     @Override
     public PlacarAtual obterPlacarAtual(Long id) {
         return placarAtual;
+    }
+
+    /**
+     * Reproduz a regra autoritativa do {@link JogoService} para placar negativo
+     * (Requisito 4.4): lanca {@link EntradaInvalidaException} com a mesma mensagem,
+     * permitindo verificar que a interface exibe a mensagem vinda do backend no
+     * {@code FeedbackPanel} da pagina. Para valores validos atualiza e devolve o Jogo.
+     */
+    @Override
+    public Jogo atualizarPlacar(Long id, int placarA, int placarB) {
+        if (placarA < 0) {
+            throw new EntradaInvalidaException(
+                    "O campo 'placarA' deve ser um inteiro maior ou igual a 0.");
+        }
+        if (placarB < 0) {
+            throw new EntradaInvalidaException(
+                    "O campo 'placarB' deve ser um inteiro maior ou igual a 0.");
+        }
+        jogo.setPlacarA(placarA);
+        jogo.setPlacarB(placarB);
+        return jogo;
     }
 }

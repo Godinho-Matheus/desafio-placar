@@ -212,7 +212,10 @@ public class JogosPage extends WebPage {
                 item.add(new Label("status", jogo.getStatus().name()));
                 item.add(new Label("dataHoraPartida", formatarDataHora(jogo.getDataHoraPartida())));
                 // Acoes por Jogo: atualizar placar e encerrar (subtask 9.4).
-                item.add(new PlacarPanel("placarPanel", jogo));
+                // Repassa o jogoService da pagina ao painel. Em producao, no momento
+                // do populateItem (tempo de render) o campo ja foi injetado pelo CDI;
+                // em testes, foi atribuido pelo construtor de teste da JogosPage.
+                item.add(new PlacarPanel("placarPanel", jogo, jogoService));
             }
         };
         add(listaJogos);

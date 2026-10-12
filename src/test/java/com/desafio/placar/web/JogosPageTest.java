@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +83,28 @@ class JogosPageTest {
         // PlacarPanel (campos editaveis) NAO e re-renderizado pelo polling.
         tester.assertComponentOnAjaxResponse("jogos:0:placarA");
         tester.assertComponentOnAjaxResponse("jogos:0:placarB");
+    }
+
+    @Test
+    void atualizarPlacar_deveExibirMensagemDoBackendParaPlacarNegativoNoFeedbackPanel() {
+        // A regra de placar >= 0 e autoritativa no JogoService (Requisito 4.4). A
+        // interface nao a replica: o valor negativo flui ate o servico, que lanca
+        // EntradaInvalidaException. O stub reproduz essa regra com a mesma mensagem.
+        ServicoControlavel servico = new ServicoControlavel();
+
+        tester.startPage(new JogosPage(servico));
+        tester.assertRenderedPage(JogosPage.class);
+
+        // Submete placar negativo pelo formulario do PlacarPanel da linha 0.
+        FormTester form = tester.newFormTester("jogos:0:placarPanel:atualizarPlacarForm");
+        form.setValue("placarA", "-1");
+        form.setValue("placarB", "-1");
+        form.submit("atualizarBotao");
+
+        // A pagina continua sendo a JogosPage (erro nao navega) e o FeedbackPanel
+        // da pagina deve exibir exatamente a mensagem rejeitada pelo backend.
+        tester.assertRenderedPage(JogosPage.class);
+        tester.assertErrorMessages("O campo 'placarA' deve ser um inteiro maior ou igual a 0.");
     }
 
     /**

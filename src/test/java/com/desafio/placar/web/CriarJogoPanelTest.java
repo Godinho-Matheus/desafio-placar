@@ -8,7 +8,9 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,6 +106,29 @@ class CriarJogoPanelTest {
         // O markup renderizado deve usar o input HTML datetime-local (melhoria de UX).
         assertTrue(tester.getLastResponseAsString().contains("type=\"datetime-local\""),
                 "O campo de data/hora deve ser renderizado como <input type=\"datetime-local\">");
+    }
+
+    @Test
+    void formulario_deveRejeitarTimeEmBrancoNaInterface() {
+        // Renderizacao e validacao de "required" nao dependem do JogoService
+        // (so usado no submit valido), entao dispensam CDI, como nos demais testes.
+        tester.startComponentInPage(new CriarJogoPanel("criarJogoPanel"));
+
+        // timeA apenas com espacos: o Wicket apara a entrada antes de validar, de
+        // modo que vira vazia e o setRequired(true) a rejeita, espelhando o
+        // isBlank() do JogoService.criar (Requisito 1.3). timeB preenchido para
+        // isolar o erro em timeA.
+        FormTester form = tester.newFormTester("criarJogoPanel:criarJogoForm");
+        form.setValue("timeA", "   ");
+        form.setValue("timeB", "Corinthians");
+        form.setValue("dataHoraPartida", "2025-01-01T20:00");
+        form.submit();
+
+        // A interface deve sinalizar erro de validacao no campo obrigatorio timeA.
+        FormComponent<?> timeA = (FormComponent<?>) tester.getComponentFromLastRenderedPage(
+                "criarJogoPanel:criarJogoForm:timeA");
+        assertTrue(timeA.hasErrorMessage(),
+                "A interface deve exibir erro de validacao para timeA em branco");
     }
 
     @Test

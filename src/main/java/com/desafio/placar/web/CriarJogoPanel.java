@@ -102,6 +102,12 @@ public class CriarJogoPanel extends Panel {
             }
         };
 
+        // Mesma regra do JogoService.criar (Requisito 1.3): timeA e timeB sao
+        // obrigatorios e nao podem ser apenas espacos em branco. O Wicket apara a
+        // entrada de TextField antes de validar (shouldTrimInput() = true por
+        // padrao), de modo que uma string so com espacos vira vazia e e rejeitada
+        // por setRequired(true), espelhando o isBlank() do servico. A validacao
+        // autoritativa permanece no JogoService.
         TextField<String> timeA = new TextField<>("timeA", timeAModel);
         timeA.setRequired(true);
         form.add(timeA);
