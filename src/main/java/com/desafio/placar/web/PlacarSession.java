@@ -21,6 +21,23 @@ public class PlacarSession extends WebSession {
 
     private static final long serialVersionUID = 1L;
 
+    /** Idioma inicial de toda nova sessao: portugues do Brasil. */
+    static final Locale LOCALE_PADRAO = Locale.of("pt", "BR");
+
+    /**
+     * Cria a sessao ja com o idioma padrao (portugues do Brasil).
+     *
+     * <p>Este e o construtor padrao do Wicket ({@link Request}); garante que
+     * qualquer nova sessao inicie em pt-BR, independentemente do locale da
+     * requisicao, enquanto a troca para ingles via {@link #setLocale(Locale)}
+     * (seletor da interface) continua funcionando e sendo persistida.</p>
+     *
+     * @param request requisicao corrente (exigida pelo construtor do Wicket)
+     */
+    public PlacarSession(Request request) {
+        this(request, LOCALE_PADRAO);
+    }
+
     /**
      * Cria a sessao e define o locale inicial.
      *

@@ -1,5 +1,6 @@
 package com.desafio.placar.web;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Locale;
@@ -42,11 +43,21 @@ class I18nInterfaceTest {
 
     @Test
     void interface_devePrincipaisTextosEmPortuguesPorPadrao() {
+        // Exercita o fluxo REAL de criacao de sessao da aplicacao (newSession ->
+        // PlacarSession), que deve iniciar em pt-BR sem o teste forcar o locale.
+        tester.destroy();
+        tester = new WicketTester(new TestPlacarApplication());
+
         ServicoControlavel servico = new ServicoControlavel();
         servico.definirPlacarAtual(new PlacarAtual(0, 0));
 
         tester.startPage(new JogosPage(servico));
         tester.assertRenderedPage(JogosPage.class);
+
+        // Comprova o comportamento real: a nova sessao iniciou em pt-BR (o teste
+        // NAO definiu o locale manualmente).
+        assertEquals(Locale.of("pt", "BR"), tester.getSession().getLocale(),
+                "Uma nova sessao deve iniciar com Locale pt-BR por padrao");
 
         String html = tester.getLastResponseAsString();
 
