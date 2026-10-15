@@ -1,4 +1,0 @@
-error: pathspec 'install.log' did not match any file(s) known to git
-error: pathspec 'final.txt' did not match any file(s) known to git
-Did you forget to 'git add'?
-mvn-test-out.txt

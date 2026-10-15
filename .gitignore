@@ -15,6 +15,9 @@ target/
 /final*.txt
 /run*.txt
 /verify*.txt
+/result*.txt
+/git*.txt
+*.tmp
 
 # Metadados de IDE / editor
 .idea/
