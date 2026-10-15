@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Placar</title>
+    <title><wicket:message key="app.titulo">Placar</wicket:message></title>
     <!-- CSS servido como recurso de pacote do Wicket (mesmo pacote da pagina),
          resolvido automaticamente por <wicket:link>. Sem dependencias externas. -->
     <wicket:link>
@@ -13,10 +13,17 @@
 <body>
     <div class="pagina">
 
-        <!-- Cabecalho com titulo e descricao curta. -->
+        <!-- Cabecalho com titulo, descricao curta e seletor de idioma (i18n). -->
         <header class="cabecalho">
-            <h1>Placar</h1>
-            <p class="subtitulo">Gerenciamento de placares de partidas de futebol em tempo real.</p>
+            <!-- Seletor de idioma (PT/EN): troca o locale da sessao e re-renderiza
+                 a pagina. Textos resolvidos via resource bundle da aplicacao. -->
+            <form wicket:id="idiomaForm" class="idioma">
+                <label for="idioma"><wicket:message key="idioma.rotulo">Idioma</wicket:message></label>
+                <select wicket:id="idioma" id="idioma"></select>
+                <button type="submit" class="botao-secundario"><wicket:message key="idioma.trocar">Trocar</wicket:message></button>
+            </form>
+            <h1><wicket:message key="app.titulo">Placar</wicket:message></h1>
+            <p class="subtitulo"><wicket:message key="app.subtitulo">Gerenciamento de placares de partidas de futebol em tempo real.</wicket:message></p>
         </header>
 
         <!-- Componente auxiliar neutro que hospeda o AjaxSelfUpdatingTimerBehavior
@@ -30,16 +37,16 @@
 
         <!-- Painel de criacao de Jogo (submit sincrono simples, sem Ajax). -->
         <section class="card">
-            <h2 class="card__titulo">Novo jogo</h2>
-            <p class="card__descricao">Cadastre uma nova partida informando os times e a data/hora.</p>
+            <h2 class="card__titulo"><wicket:message key="card.novoJogo.titulo">Novo jogo</wicket:message></h2>
+            <p class="card__descricao"><wicket:message key="card.novoJogo.descricao">Cadastre uma nova partida informando os times e a data/hora.</wicket:message></p>
             <div wicket:id="criarJogoPanel"></div>
         </section>
 
         <!-- Filtro por status: submit sincrono simples (sem Ajax). -->
         <form wicket:id="filtroForm" class="filtro card">
-            <label for="filtroStatus">Status:</label>
+            <label for="filtroStatus"><wicket:message key="filtro.statusRotulo">Status:</wicket:message></label>
             <select wicket:id="filtroStatus" id="filtroStatus"></select>
-            <button type="submit" class="botao-secundario">Filtrar</button>
+            <button type="submit" class="botao-secundario"><wicket:message key="filtro.botao">Filtrar</wicket:message></button>
         </form>
 
         <!-- Listagem dos jogos (dados completos vindos do PostgreSQL via JogoService). -->
@@ -48,11 +55,11 @@
                 <table class="jogos">
                     <thead>
                         <tr>
-                            <th class="col-id">ID</th>
-                            <th class="col-partida">Partida</th>
-                            <th>Status</th>
-                            <th>Data/Hora</th>
-                            <th>Acoes</th>
+                            <th class="col-id"><wicket:message key="tabela.id">ID</wicket:message></th>
+                            <th class="col-partida"><wicket:message key="tabela.partida">Partida</wicket:message></th>
+                            <th><wicket:message key="tabela.status">Status</wicket:message></th>
+                            <th><wicket:message key="tabela.dataHora">Data/Hora</wicket:message></th>
+                            <th><wicket:message key="tabela.acoes">Acoes</wicket:message></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,14 +81,15 @@
                                     <span wicket:id="timeA" class="partida__time partida__time--a">Time A</span>
                                     <span class="partida__placar">
                                         <span wicket:id="placarA" class="partida__gols">0</span>
-                                        <span class="partida__x">x</span>
+                                        <span class="partida__x"><wicket:message key="placar.separador">x</wicket:message></span>
                                         <span wicket:id="placarB" class="partida__gols">0</span>
                                     </span>
                                     <span wicket:id="timeB" class="partida__time partida__time--b">Time B</span>
                                 </div>
                             </td>
                             <!-- Wrapper visual .coluna-status; o rotulo de status (wicket:id="status",
-                                 preservado) recebe o estilo de badge. -->
+                                 preservado) recebe o estilo de badge. Seu TEXTO e traduzido na pagina
+                                 (chave status.<NOME>), nao mais o nome cru do enum. -->
                             <td class="coluna-status">
                                 <span wicket:id="status" class="status-badge">EM_ANDAMENTO</span>
                             </td>

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,8 +15,10 @@ import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -95,8 +98,8 @@ public class JogosPage extends WebPage {
 
     private static final Logger LOGGER = Logger.getLogger(JogosPage.class.getName());
 
-    private static final DateTimeFormatter FORMATO_DATA_HORA =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    /** Locale do portugues (Brasil) oferecido no seletor de idioma. */
+    private static final Locale LOCALE_PT = Locale.of("pt", "BR");
 
     /**
      * Intervalo (configuravel, sem SLA) entre os ciclos de atualizacao automatica
@@ -145,6 +148,12 @@ public class JogosPage extends WebPage {
             this.jogoService = jogoService;
         }
 
+        // Seletor de idioma (i18n): troca o locale da sessao (persistido na
+        // PlacarSession) e re-renderiza a pagina para refletir o novo idioma em
+        // toda a interface. Submit sincrono simples, no mesmo padrao dos demais
+        // formularios da pagina (sem Ajax).
+        add(criarFormularioIdioma());
+
         // Painel de mensagens (erros de dominio e mensagens genericas).
         // Tambem sera reutilizado pelas subtasks 9.3 e 9.4.
         add(new FeedbackPanel("feedback"));
@@ -169,11 +178,31 @@ public class JogosPage extends WebPage {
         Form<Void> filtroForm = new Form<>("filtroForm");
 
         List<Status> opcoesStatus = new ArrayList<>(Arrays.asList(Status.values()));
+
+        // Renderer que exibe o Status TRADUZIDO (chave status.<NOME>), mantendo o
+        // enum do dominio como valor real do modelo (sem alterar o backend).
+        IChoiceRenderer<Status> statusRenderer = new ChoiceRenderer<>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Object getDisplayValue(Status status) {
+                return getString("status." + status.name());
+            }
+
+            @Override
+            public String getIdValue(Status status, int index) {
+                return status.name();
+            }
+        };
+
         DropDownChoice<Status> filtroStatus = new DropDownChoice<>(
                 "filtroStatus",
                 new PropertyModel<>(this, "statusSelecionado"),
-                opcoesStatus);
-        // null valido => opcao vazia renderizada como "Todos".
+                opcoesStatus,
+                statusRenderer);
+        // null valido => opcao vazia renderizada como "Todos"/"All". O texto da
+        // opcao nula e resolvido pelo Wicket via a chave de recurso "nullValid"
+        // (definida nos bundles da aplicacao), portanto segue o locale corrente.
         filtroStatus.setNullValid(true);
         filtroForm.add(filtroStatus);
         add(filtroForm);
@@ -209,7 +238,10 @@ public class JogosPage extends WebPage {
                 item.add(placarALabel);
                 item.add(placarBLabel);
 
-                item.add(new Label("status", jogo.getStatus().name()));
+                // Status exibido TRADUZIDO (camada de apresentacao). A chave segue
+                // o padrao "status.<NOME_DO_ENUM>" (ex.: status.EM_ANDAMENTO); o enum
+                // do dominio permanece inalterado.
+                item.add(new Label("status", getString("status." + jogo.getStatus().name())));
                 item.add(new Label("dataHoraPartida", formatarDataHora(jogo.getDataHoraPartida())));
                 // Acoes por Jogo: atualizar placar e encerrar (subtask 9.4).
                 // Repassa o jogoService da pagina ao painel. Em producao, no momento
@@ -322,16 +354,86 @@ public class JogosPage extends WebPage {
             return new ArrayList<>();
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Falha inesperada ao listar jogos", e);
-            error("Nao foi possivel carregar os jogos no momento. Tente novamente.");
+            error(getString("feedback.listarErroGenerico"));
             return new ArrayList<>();
         }
     }
 
-    private static String formatarDataHora(OffsetDateTime dataHora) {
+    /**
+     * Formata a data/hora da partida conforme o idioma corrente da sessao.
+     *
+     * <p>O padrao de formatacao vem do resource bundle (chave {@code formato.dataHora}):
+     * portugues usa {@code dd/MM/yyyy HH:mm} e ingles usa {@code MM/dd/yyyy hh:mm a}.
+     * O {@link DateTimeFormatter} e construido com o {@link Locale} da sessao para
+     * que elementos sensiveis ao idioma (ex.: AM/PM) sejam renderizados corretamente.</p>
+     *
+     * @param dataHora data/hora a formatar; {@code null} resulta em texto vazio
+     * @return a data/hora formatada no idioma corrente, ou {@code ""} se nula
+     */
+    private String formatarDataHora(OffsetDateTime dataHora) {
         if (dataHora == null) {
             return "";
         }
-        return dataHora.format(FORMATO_DATA_HORA);
+        Locale locale = getLocale();
+        if (locale == null) {
+            locale = LOCALE_PT;
+        }
+        DateTimeFormatter formatador =
+                DateTimeFormatter.ofPattern(getString("formato.dataHora"), locale);
+        return dataHora.format(formatador);
+    }
+
+    /**
+     * Cria o formulario do seletor de idioma (PT/EN).
+     *
+     * <p>O idioma corrente e lido de {@link #getLocale()} (persistido na
+     * {@link PlacarSession}) e, ao submeter, {@link #getSession()} recebe o novo
+     * locale e a pagina e re-renderizada, aplicando o idioma a toda a interface. As
+     * opcoes sao renderizadas com rotulos legiveis vindos do bundle
+     * ({@code idioma.pt}/{@code idioma.en}).</p>
+     *
+     * @return o formulario de troca de idioma pronto para ser adicionado a pagina
+     */
+    private Form<Void> criarFormularioIdioma() {
+        IModel<Locale> idiomaModel = Model.of(getLocale());
+
+        List<Locale> idiomas = List.of(LOCALE_PT, Locale.ENGLISH);
+
+        IChoiceRenderer<Locale> renderer = new ChoiceRenderer<>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Object getDisplayValue(Locale locale) {
+                String chave = Locale.ENGLISH.getLanguage().equals(locale.getLanguage())
+                        ? "idioma.en"
+                        : "idioma.pt";
+                return getString(chave);
+            }
+
+            @Override
+            public String getIdValue(Locale locale, int index) {
+                return locale.getLanguage();
+            }
+        };
+
+        DropDownChoice<Locale> idioma =
+                new DropDownChoice<>("idioma", idiomaModel, idiomas, renderer);
+        idioma.setNullValid(false);
+
+        Form<Void> idiomaForm = new Form<Void>("idiomaForm") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected void onSubmit() {
+                Locale selecionado = idiomaModel.getObject();
+                if (selecionado != null) {
+                    getSession().setLocale(selecionado);
+                }
+                setResponsePage(JogosPage.class);
+            }
+        };
+        idiomaForm.add(idioma);
+        return idiomaForm;
     }
 
     public Status getStatusSelecionado() {

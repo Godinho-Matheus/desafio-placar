@@ -16,6 +16,14 @@ alterado.
 
 ## Arquitetura
 
+O [modelo C4 completo](docs/arquitetura/c4-model.md) documenta contexto,
+contêineres, componentes e código, além dos fluxos de atualização e da
+implantação Docker, com diagramas Mermaid e referências ao código-fonte.
+
+Os [diagramas de sequência UML](docs/arquitetura/sequencia/README.md) detalham
+os fluxos de criação, consulta, atualização de placar, encerramento e polling,
+com fontes PlantUML e imagens SVG.
+
 Monólito Jakarta EE em um único WAR no Payara. O PostgreSQL é a única fonte de
 verdade; o Redis é apenas cache do placar atual; o RabbitMQ é usado para
 propagação assíncrona. A interface Wicket usa polling e chama o `JogoService`

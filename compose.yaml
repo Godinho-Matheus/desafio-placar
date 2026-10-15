@@ -90,6 +90,10 @@ services:
       RABBITMQ_USERNAME: ${RABBITMQ_DEFAULT_USER:-placar}
       RABBITMQ_PASSWORD: ${RABBITMQ_DEFAULT_PASS:-placar_dev}
       RABBITMQ_VIRTUAL_HOST: /
+
+      # Debugg: Para debugar com o Intellij
+      JVM_ARGS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
     ports:
       # So a porta publicada no host e configuravel (fallback ao default); a
       # porta interna do container permanece fixa em 8080.
@@ -97,6 +101,8 @@ services:
       # Admin Console (opcional, apenas para inspecao; nao e necessario para
       # configurar ou executar o sistema).
       - "${PAYARA_ADMIN_PORT:-4848}:4848"
+      - "5005:5005"
+
     healthcheck:
       # So fica "healthy" quando a aplicacao realmente responde (evita o 404
       # temporario enquanto o WAR ainda esta implantando). A imagem do Payara

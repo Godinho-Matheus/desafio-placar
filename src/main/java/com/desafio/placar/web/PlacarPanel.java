@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.Status;
@@ -179,8 +180,9 @@ public class PlacarPanel extends Panel {
                     placarAModel.getObject(),
                     placarBModel.getObject());
 
-            info("Placar do jogo " + atualizado.getId() + " atualizado para "
-                    + atualizado.getPlacarA() + " x " + atualizado.getPlacarB() + ".");
+            info(new StringResourceModel("feedback.placarAtualizado", this)
+                    .setParameters(atualizado.getId(), atualizado.getPlacarA(), atualizado.getPlacarB())
+                    .getString());
 
             setResponsePage(JogosPage.class);
         } catch (EntradaInvalidaException | NaoEncontradoException | JogoEncerradoException e) {
@@ -191,7 +193,7 @@ public class PlacarPanel extends Panel {
             getPage().error(e.getMessage());
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Falha inesperada ao atualizar placar", e);
-            getPage().error("Nao foi possivel atualizar o placar no momento. Tente novamente.");
+            getPage().error(getString("feedback.atualizarErroGenerico"));
         }
     }
 
@@ -208,8 +210,11 @@ public class PlacarPanel extends Panel {
         try {
             Jogo encerrado = jogoService.encerrar(jogoId);
 
-            info("Jogo " + encerrado.getId() + " encerrado (status "
-                    + encerrado.getStatus().name() + ").");
+            // Mensagem parametrizada: {0}=id, {1}=status traduzido (chave status.<NOME>).
+            String statusTraduzido = getString("status." + encerrado.getStatus().name());
+            info(new StringResourceModel("feedback.jogoEncerrado", this)
+                    .setParameters(encerrado.getId(), statusTraduzido)
+                    .getString());
 
             setResponsePage(JogosPage.class);
         } catch (EntradaInvalidaException | NaoEncontradoException | JogoEncerradoException e) {
@@ -217,7 +222,7 @@ public class PlacarPanel extends Panel {
             getPage().error(e.getMessage());
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Falha inesperada ao encerrar jogo", e);
-            getPage().error("Nao foi possivel encerrar o jogo no momento. Tente novamente.");
+            getPage().error(getString("feedback.encerrarErroGenerico"));
         }
     }
 }

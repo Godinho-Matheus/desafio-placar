@@ -7,6 +7,15 @@ target/
 # Logs
 *.log
 
+# Saidas de build/teste geradas ad-hoc na raiz (nao versionar)
+/mvn-test-out.txt
+/*-out.txt
+/build*.txt
+/test*.txt
+/final*.txt
+/run*.txt
+/verify*.txt
+
 # Metadados de IDE / editor
 .idea/
 *.iml

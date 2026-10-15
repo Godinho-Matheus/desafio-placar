@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import com.desafio.placar.domain.Jogo;
 import com.desafio.placar.domain.excecao.EntradaInvalidaException;
@@ -153,7 +154,7 @@ public class CriarJogoPanel extends Panel {
         try {
             dataHoraPartida = combinarDataHora(dataHoraLocalModel.getObject(), offsetModel.getObject());
         } catch (DateTimeException | NullPointerException e) {
-            error("Informe a data e a hora da partida e selecione o fuso (offset UTC).");
+            error(getString("feedback.criarDataHoraInvalida"));
             return;
         }
 
@@ -163,8 +164,13 @@ public class CriarJogoPanel extends Panel {
                     timeBModel.getObject(),
                     dataHoraPartida);
 
-            info("Jogo criado (id " + jogo.getId() + "): " + jogo.getTimeA()
-                    + " x " + jogo.getTimeB() + " (0 x 0, EM_ANDAMENTO).");
+            // Mensagem parametrizada do bundle: {0}=id, {1}=timeA, {2}=timeB,
+            // {3}=status traduzido (chave status.<NOME>). O jogo recem-criado e
+            // sempre EM_ANDAMENTO (placar 0 x 0).
+            String statusTraduzido = getString("status." + jogo.getStatus().name());
+            info(new StringResourceModel("feedback.jogoCriado", this)
+                    .setParameters(jogo.getId(), jogo.getTimeA(), jogo.getTimeB(), statusTraduzido)
+                    .getString());
 
             // Limpa os campos para uma nova criacao (offset volta ao padrao).
             timeAModel.setObject("");
@@ -179,7 +185,7 @@ public class CriarJogoPanel extends Panel {
             error(e.getMessage());
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Falha inesperada ao criar jogo", e);
-            error("Nao foi possivel criar o jogo no momento. Tente novamente.");
+            error(getString("feedback.criarErroGenerico"));
         }
     }
 

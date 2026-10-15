@@ -1,0 +1,317 @@
+@startuml 01-criar-jogo
+title Criar partida pela API REST
+hide footbox
+autonumber
+actor "Cliente REST" as Cliente
+participant JogoResource as API
+participant "Payara / interceptor JTA" as JTA
+participant JogoService as S
+participant JogoRepository as R
+database PostgreSQL as DB
+participant "ExceptionMapper apropriado" as Mapper
+
+Cliente -> API: POST /desafio-placar/api/jogos\nCriarJogoRequest
+alt Corpo ausente
+    API -> Mapper: EntradaInvalidaException
+    Mapper --> Cliente: HTTP 400 / ErroResponse
+else Corpo presente
+    API -> JTA: criar(timeA, timeB, dataHoraPartida)
+    JTA -> JTA: Iniciar transação
+    JTA -> S: criar(...)
+    alt Time ausente/em branco ou data/hora ausente
+        S --> JTA: EntradaInvalidaException
+        JTA -> JTA: Rollback
+        JTA --> API: Propagar exceção
+        API -> Mapper: Mapear falha
+        Mapper --> Cliente: HTTP 400 / ErroResponse
+    else Dados válidos
+        S -> S: Construir Jogo\nplacar 0 x 0, status EM_ANDAMENTO
+        S -> R: salvar(jogo)
+        R -> DB: EntityManager.persist(jogo) / JPA
+        DB --> R: Entidade com ID gerado
+        R --> S: Jogo
+        S --> JTA: Jogo
+        JTA -> DB: Commit
+        DB --> JTA: Confirmado
+        JTA --> API: Jogo
+        API --> Cliente: HTTP 201 / JogoResponse
+    end
+end
+note over S,DB
+Chamadas JPA são conceituais; flush/SQL são coordenados pelo provider.
+Criar jogo não dispara evento CDI de placar.
+end note
+@enduml
+
+@startuml 02-consultar-jogos
+title Listar e buscar partidas pela API REST
+hide footbox
+autonumber
+actor "Cliente REST" as Cliente
+participant JogoResource as API
+participant JogoService as S
+participant JogoRepository as R
+database PostgreSQL as DB
+participant "ExceptionMapper apropriado" as Mapper
+
+alt Listagem de partidas
+    Cliente -> API: GET /api/jogos?status=...
+    alt Status presente e inválido ou em branco
+        API -> Mapper: EntradaInvalidaException
+        Mapper --> Cliente: HTTP 400 / ErroResponse
+    else Filtro válido ou ausente
+        API -> S: listar(status ou null)
+        alt Sem filtro
+            S -> R: listarTodos()
+            R -> DB: SELECT j FROM Jogo j
+        else Com filtro
+            S -> R: listarPorStatus(status)
+            R -> DB: SELECT ... WHERE j.status = :status
+        end
+        DB --> R: Jogos
+        R --> S: List<Jogo>
+        S --> API: List<Jogo>
+        API --> Cliente: HTTP 200 / lista de JogoResponse
+    end
+else Busca por identificador
+    Cliente -> API: GET /api/jogos/{id}
+    API -> S: buscarPorId(id)
+    S -> R: buscarPorId(id)
+    R -> DB: EntityManager.find(Jogo.class, id)
+    DB --> R: Jogo ou null
+    R --> S: Optional<Jogo>
+    alt Jogo encontrado
+        S --> API: Jogo
+        API --> Cliente: HTTP 200 / JogoResponse
+    else Jogo inexistente
+        S --> API: NaoEncontradoException
+        API -> Mapper: Mapear falha
+        Mapper --> Cliente: HTTP 404 / ErroResponse
+    end
+end
+note over API,DB
+Contexto completo das URLs: /desafio-placar.
+Estas consultas REST não usam Redis.
+end note
+@enduml
+
+@startuml 03-atualizar-placar
+title Atualizar placar e propagar para o cache após commit
+hide footbox
+autonumber
+actor "Cliente REST" as Cliente
+participant JogoResource as API
+participant "Payara / JTA / CDI" as Container
+participant JogoService as S
+participant JogoRepository as R
+database PostgreSQL as DB
+participant PlacarAtualizadoObserver as O
+participant PlacarCache as Cache
+database Redis
+participant PlacarEventPublisher as P
+queue RabbitMQ as MQ
+participant PlacarEventConsumer as C
+participant "ExceptionMapper apropriado" as Mapper
+
+Cliente -> API: PUT /api/jogos/{id}/placar\nAtualizarPlacarRequest
+alt Corpo ou algum placar ausente
+    API -> Mapper: EntradaInvalidaException
+    Mapper --> Cliente: HTTP 400 / ErroResponse
+else Corpo e campos presentes
+    API -> Container: atualizarPlacar(id, placarA, placarB)
+    Container -> Container: Iniciar transação JTA
+    Container -> S: atualizarPlacar(...)
+    alt Algum placar negativo
+        S --> Container: EntradaInvalidaException
+    else Placares não negativos
+        S -> R: buscarPorId(id)
+        R -> DB: EntityManager.find(Jogo.class, id)
+        DB --> R: Jogo ou null
+        R --> S: Optional<Jogo>
+        alt Jogo inexistente
+            S --> Container: NaoEncontradoException
+        else Jogo ENCERRADO
+            S --> Container: JogoEncerradoException
+        else Jogo EM_ANDAMENTO
+            S -> S: Alterar placarA e placarB
+            S -> R: salvar(jogo)
+            R -> DB: EntityManager.merge(jogo) / JPA
+            DB --> R: Jogo gerenciado
+            R --> S: Jogo atualizado
+            S -> Container: Event.fire(PlacarAtualizadoEvent)
+            note right of Container: Observer adiado até AFTER_SUCCESS
+            S --> Container: Jogo atualizado
+        end
+    end
+    alt Houve exceção de negócio
+        Container -> Container: Rollback
+        Container --> API: Propagar exceção
+        API -> Mapper: Mapear falha
+        Mapper --> Cliente: HTTP 400, 404 ou 409 / ErroResponse
+    else Operação válida
+        Container -> DB: Commit JTA
+        alt Commit falhou
+            DB --> Container: Falha de persistência
+            Container --> API: Exceção / sem observer AFTER_SUCCESS
+            API -> Mapper: Mapear falha
+            Mapper --> Cliente: HTTP 500 / ErroResponse
+        else Commit bem-sucedido
+            DB --> Container: Confirmado
+            Container -> O: observar(PlacarAtualizadoEvent)
+            O -> Cache: invalidar(jogoId)
+            Cache -> Redis: DEL jogo:{id}:placar
+            Redis --> Cache: Resultado ou falha
+            Cache --> O: Retorno ou RuntimeException
+            opt Falha na invalidação
+                O -> O: Registrar log e continuar
+            end
+            O -> P: publicar(EventoPlacar)
+            P -> MQ: basicPublish / JSON\njogoId, placarA, placarB
+            P --> O: Retorno ou RuntimeException
+            opt Falha na publicação
+                O -> O: Registrar log e continuar
+            end
+            O --> Container: Concluir observer
+            par Resposta HTTP
+                Container --> API: Jogo atualizado
+                API --> Cliente: HTTP 200 / JogoResponse
+            else Entrega assíncrona, quando publicada e entregue
+                MQ ->> C: EventoPlacar / auto-ack
+                C -> C: Desserializar JSON
+                alt JSON válido
+                    C -> Cache: atualizar(jogoId, placarA, placarB)
+                    Cache -> Redis: SET jogo:{id}:placar\nJSON com placarA e placarB
+                    opt Falha no Redis
+                        Cache -> Cache: Registrar log, sem propagar
+                    end
+                else JSON inválido
+                    C -> C: Registrar log e ignorar mensagem
+                end
+            end
+        end
+    end
+end
+note over Container,C
+Observer síncrono após commit; entrega AMQP assíncrona.
+Falhas de Redis/RabbitMQ após commit não desfazem o jogo persistido.
+Dois consumidores registrados na mesma fila, dentro do mesmo WAR.
+Auto-ack não garante que a gravação no Redis tenha sucesso.
+end note
+@enduml
+
+@startuml 04-encerrar-jogo
+title Encerrar partida com idempotência
+hide footbox
+autonumber
+actor "Cliente REST" as Cliente
+participant JogoResource as API
+participant "Payara / interceptor JTA" as JTA
+participant JogoService as S
+participant JogoRepository as R
+database PostgreSQL as DB
+participant "ExceptionMapper apropriado" as Mapper
+
+Cliente -> API: PUT /api/jogos/{id}/status\nAtualizarStatusRequest
+alt Corpo/status ausente ou status diferente de ENCERRADO
+    API -> Mapper: EntradaInvalidaException
+    Mapper --> Cliente: HTTP 400 / ErroResponse
+else Status ENCERRADO
+    API -> JTA: encerrar(id)
+    JTA -> JTA: Iniciar transação
+    JTA -> S: encerrar(id)
+    S -> R: buscarPorId(id)
+    R -> DB: EntityManager.find(Jogo.class, id)
+    DB --> R: Jogo ou null
+    R --> S: Optional<Jogo>
+    alt Jogo inexistente
+        S --> JTA: NaoEncontradoException
+        JTA -> JTA: Rollback
+        JTA --> API: Propagar exceção
+        API -> Mapper: Mapear falha
+        Mapper --> Cliente: HTTP 404 / ErroResponse
+    else Jogo encontrado
+        alt Já ENCERRADO
+            S -> S: Preservar estado (idempotência)
+        else EM_ANDAMENTO
+            S -> S: Alterar status para ENCERRADO
+            S -> R: salvar(jogo)
+            R -> DB: EntityManager.merge(jogo) / JPA
+            DB --> R: Jogo gerenciado
+            R --> S: Jogo
+        end
+        S --> JTA: Jogo
+        JTA -> DB: Commit
+        DB --> JTA: Confirmado
+        JTA --> API: Jogo
+        API --> Cliente: HTTP 200 / JogoResponse
+    end
+end
+note over S,DB
+Placares preservados. Sem evento CDI de placar,
+invalidação Redis ou publicação RabbitMQ nesta operação.
+end note
+@enduml
+
+@startuml 05-interface-polling
+title Interface Wicket: carga inicial e polling de placares
+hide footbox
+autonumber
+actor "Usuário" as Usuario
+participant Navegador as B
+participant JogosPage as W
+participant JogoService as S
+participant JogoRepository as R
+database PostgreSQL as DB
+participant PlacarCache as Cache
+database Redis
+
+Usuario -> B: Abrir página ou submeter filtro
+B -> W: Requisição HTTP da interface
+W -> S: listar(statusSelecionado)
+S -> R: listarTodos() ou listarPorStatus(status)
+R -> DB: Consulta JPA
+DB --> R: Jogos completos
+R --> S: List<Jogo>
+S --> W: List<Jogo>
+W --> B: HTML com jogos, status e formulários
+
+loop A cada 5 segundos enquanto o polling estiver ativo
+    B -> W: Callback Ajax do pollingTrigger
+    loop Para cada jogo já exibido
+        W -> S: obterPlacarAtual(id)
+        S -> Cache: ler(id)
+        Cache -> Redis: GET jogo:{id}:placar
+        alt Cache presente e JSON válido
+            Redis --> Cache: JSON com placarA e placarB
+            Cache --> S: Optional<PlacarAtual>
+            S --> W: PlacarAtual
+        else Chave ausente, erro Redis ou JSON inválido
+            Redis --> Cache: Ausência de valor ou falha
+            Cache --> S: Optional.empty()
+            S -> R: buscarPorId(id)
+            R -> DB: EntityManager.find(Jogo.class, id)
+            DB --> R: Jogo ou null
+            R --> S: Optional<Jogo>
+            alt Jogo encontrado
+                S -> S: Construir PlacarAtual a partir do Jogo
+                S --> W: PlacarAtual
+            else Jogo inexistente
+                S --> W: NaoEncontradoException
+            end
+        end
+        alt Consulta bem-sucedida
+            opt Algum placar mudou
+                W -> W: Atualizar modelos e incluir somente\nrótulos alterados no AjaxRequestTarget
+            end
+        else Falha ao consultar jogo
+            W -> W: Registrar log e manter último placar visível
+        end
+    end
+    W --> B: Resposta Ajax com atualização parcial
+end
+note over W,Redis
+Wicket chama o serviço diretamente via CDI, sem passar pela API REST.
+Fallback PostgreSQL não repopula Redis.
+Polling não recarrega lista, status nem campos de edição.
+end note
+@enduml
